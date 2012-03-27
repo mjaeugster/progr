@@ -1,0 +1,47 @@
+\documentclass[a4paper,parskip=half]{scrreprt}
+
+\usepackage{xcolor}
+\definecolor{Red}{rgb}{0.5,0,0}
+\definecolor{Blue}{rgb}{0,0,0.5}
+\definecolor{Black}{rgb}{0,0,0}
+\usepackage{hyperref}
+\hypersetup{%
+  pdfauthor = {Manuel J. A. Eugster},
+  hyperindex = {true},
+  colorlinks = {true},
+  linktocpage = {true},
+  plainpages = {false},
+  linkcolor = {Blue}, % {Black},
+  citecolor = {Blue}, % {Black},
+  urlcolor = {Blue},  % {Black},
+  pdfstartview = {Fit},
+  pdfpagemode = {UseOutlines},
+  pdfview = {XYZ null null null},
+}
+
+\newcommand{\progrchapternumber}[1]{\setcounter{chapter}{#1}}
+\newcommand{\progrchapter}[1]{\chapter{#1}}
+\newcommand{\progrchapterabstract}[1]{#1}
+
+\newcommand{\seealso}[1]{\textit{See also:}~#1}
+\newcommand{\rcode}[1]{\texttt{#1}}
+
+
+\begin{document}
+
+\begin{titlepage}
+  {\Large Manuel J. A. Eugster}\\[3em]
+  {\usekomafont{title}{\Huge Programming R}}\\[2em]
+  {\usekomafont{subtitle}{\Large Chapter {{ch_number}}: {{ch_title}} }}\\[2em]
+  Last modification on {{ch_mtime}} \\
+  \vfill
+  This is a draft of the R programming book I always wanted to read.\\
+  \url{http://mjaeugster.github.com/progr}\\
+  Which CC license?
+\end{titlepage}
+
+<<jargon, child='{{ch_file}}', eval=TRUE>>=
+@
+
+
+\end{document}

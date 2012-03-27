@@ -1,0 +1,12 @@
+
+\SweaveOpts{fig.path='figs/navigation-', fig.align='center',
+  fig.show='hold', tidy=FALSE, prompt=TRUE, comment=''}
+
+
+\progrchapter{Navigation}
+\progrsectionabstract{
+  Navigate through R.
+}
+
+
+

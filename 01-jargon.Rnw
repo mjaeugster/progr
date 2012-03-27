@@ -1,0 +1,161 @@
+
+\SweaveOpts{fig.path='figs/jargon-', fig.align='center',
+  fig.show='hold', tidy=FALSE, prompt=TRUE, comment=''}
+
+
+\progrchapternumber{0}
+\progrchapter{Basic Vocabulary}
+\progrchapterabstract{
+  The basic vocabulary you should know to read this book.
+}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{General}
+
+\paragraph{R:} A language and environment for statistical computing
+and graphics.
+
+\paragraph{CRAN:}
+\paragraph{R-Forge:}
+\paragraph{Repository:}
+\paragraph{Package:}
+\paragraph{Library:}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Session}
+
+\paragraph{Console:} R is a command line interpreter---when you tart
+R, it issues a prompt waiting for input. The default prompt is
+``\rcode{\Sexpr{options()$prompt}}''. %$
+<<>>=
+1 + 1
+@
+
+The input is called an \textbf{expression}. If the user enters a
+complete expression, R evaluates the expression and shows the output
+immediatley. If---after the user has pressed \texttt{Enter}---the
+input can not be interpreted as a complete expression, R keeps
+prompting for more input showing a
+``\rcode{\Sexpr{options()$continue}}''. %$
+<<>>=
+1 +
+2
+@
+
+\seealso{
+  \rcode{?options} to change global options which affect the
+  way in which R computes and displays its results.
+}
+
+
+
+\paragraph{Session:} A session starts when you start up R and ends
+when you quit R.
+<<eval=FALSE>>=
+q()
+@
+The function to quit the current R session asks if you want to save
+the \textbf{workspace} of the current session.
+
+
+
+\paragraph{Objects:} During an R session \textbf{objects} are created
+and stored by name.
+<<>>=
+a <- 1 + 1
+a
+b <- "Hello World!"
+b
+@
+The function \rcode{ls()} (or \rcode{objects()}) lists all ``currently
+stored`` objects.
+<<>>=
+ls()
+@
+To remove one object use the \rcode{rm()} function.
+<<>>=
+rm(a)
+ls()
+@
+Execute \rcode{rm(list = ls())} to remove all currently stored objects.
+
+
+
+\paragraph{Workspace:} The ``container'' of an R session is called the
+workspace. There, all objects of a session are stored. Use
+\rcode{ls()} to list all objects of the current workspace.
+
+At the end of an R session (indicated, e.g., by executing
+\rcode{q()}), the user is asked to save the current workspace or
+not. If approvied, the objects are written to a file called
+\rcode{.RData} in the \textbf{current working directory}, and the
+command lines used in the session are saved to a file called
+\rcode{.Rhistory}.
+
+When R is started at later time from the same directory it reloads the
+workspace from this file and the associated commands history is
+reloaded.
+
+Note that files starting with a \rcode{.} are normally hidden files,
+and you have to explicitly indicate in your operating system (or
+shell, or Explorer, etc.) that you want to see these files.
+
+\seealso{
+  Use the function \rcode{save.image()} to save the current workspace
+  at any time during a session. Use the \rcode{save()} function to
+  save specific objects.
+}
+
+
+
+\paragraph{Working directory:} The working directory is the default
+directory where all ``things'' (workspace, figures, etc.) are stored
+or looked for (source files, etc.), when no specific path is stated.
+
+The function \rcode{getwd()} returns the current workspace, the
+function \rcode{setwd()} sets the current workspace.
+<<>>=
+setwd("z:/Projects/progr/progr")
+getwd()
+@
+
+It is useful to create a working directory for each project.
+
+Note that in Microsoft Windows you have to use a slash (\rcode{/}) or
+a quoted backslash (\rcode{\textbackslash\textbackslash}) instead of a
+backslash (\rcode{\textbackslash}).
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Help}
+
+\paragraph{Manuals:}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Language}
+
+\paragraph{Object:}
+\paragraph{Expression:} Command, statement
+\paragraph{Function:}
+\paragraph{Comment:}
+<<>>=
+# This is a comment line
+1 + 1  # A Computation
+@
+\paragraph{Operator:}
+\paragraph{Environment:}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Editors}
+
+
