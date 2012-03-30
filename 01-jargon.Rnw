@@ -12,23 +12,15 @@
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{General}
-
-\paragraph{R:} A language and environment for statistical computing
-and graphics.
-
-\paragraph{CRAN:}
-\paragraph{R-Forge:}
-\paragraph{Repository:}
-\paragraph{Package:}
-\paragraph{Library:}
+R is a language and environment for statistical computing and
+graphics.
 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Session}
 
-\paragraph{Console:} R is a command line interpreter---when you tart
+\paragraph{Console:} R is a command line interpreter---when you start
 R, it issues a prompt waiting for input. The default prompt is
 ``\rcode{\Sexpr{options()$prompt}}''. %$
 <<>>=
@@ -134,6 +126,9 @@ backslash (\rcode{\textbackslash}).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Help}
 
+\paragraph{\rcode{?}:}
+
+
 \paragraph{Manuals:}
 
 
@@ -152,6 +147,17 @@ backslash (\rcode{\textbackslash}).
 @
 \paragraph{Operator:}
 \paragraph{Environment:}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Packages}
+
+\paragraph{Package:}
+\paragraph{CRAN:}
+\paragraph{R-Forge:}
+\paragraph{Repository:}
+\paragraph{Library:}
 
 
 

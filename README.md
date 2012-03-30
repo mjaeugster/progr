@@ -1,6 +1,6 @@
 # Programming R
 
-> The R book I always wanted to read.
+> The R programming book I always wanted to read.
 
 
 

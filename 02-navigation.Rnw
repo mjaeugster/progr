@@ -5,8 +5,29 @@
 
 \progrchapter{Navigation}
 \progrsectionabstract{
-  Navigate through R.
+  Navigate through R; first steps in finding, reading, debugging,
+  etc. R objects.
 }
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Environments}
+
+<<>>=
+globalenv()
+ls(envir = globalenv())
+@
+
+<<>>=
+
+@
+
 
 
 

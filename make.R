@@ -4,14 +4,15 @@ stopifnot(require("whisker"))
 stopifnot(require("tools"))
 
 
-make_chapter <- function(file, master_file = "progr-chapter.whisker") {
+make_chapter <- function(file, master_file = "progr-chapter.whisker",
+                         clean = TRUE, texify = TRUE) {
   child <- readLines(file)
 
   data <- list()
   data$ch_number <- chapter_number(child)
   data$ch_title <- chapter_title(child)
   data$ch_file <- file
-  data$ch_mtime <- format(Sys.Date())
+  data$ch_mtime <- format(Sys.Date())  # TODO: use git log
 
   master <- readLines(master_file)
   master <- whisker.render(master, data)
@@ -23,14 +24,20 @@ make_chapter <- function(file, master_file = "progr-chapter.whisker") {
 
   master_tex <- knit(master_rnw)
 
-  texi2pdf(master_tex, clean = TRUE, quiet = FALSE)
+  if ( texify ) {
+    texi2pdf(master_tex, clean = TRUE, quiet = FALSE)
+  }
 
   child_tex <- sub("[.][^.]*$", "", file)
   child_tex <- sprintf("%s.tex", child_tex)
 
-  unlink(master_tex)
-  unlink(master_rnw)
-  unlink(child_tex)
+  if ( clean ) {
+    unlink(master_tex)
+    unlink(master_rnw)
+    unlink(child_tex)
+  }
+
+  invisible(NULL)
 }
 
 
