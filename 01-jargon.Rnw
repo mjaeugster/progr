@@ -1,4 +1,6 @@
 
+\Sexpr{set_parent('progr-chapter.whisker')}
+
 \SweaveOpts{fig.path='figs/jargon-', fig.align='center',
   fig.show='hold', tidy=FALSE, prompt=TRUE, comment=''}
 
@@ -6,15 +8,22 @@
 \progrchapternumber{0}
 \progrchapter{Basic Vocabulary}
 \progrchapterabstract{
-  The basic vocabulary you should know to read this book.
+The basic vocabulary you should know to read this book.
 }
 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 R is a language and environment for statistical computing and
-graphics.
+graphics. 
 
+<<>>=
+citation()
+@ 
+
+<<>>=
+contributors()
+@ 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -126,7 +135,42 @@ backslash (\rcode{\textbackslash}).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Help}
 
-\paragraph{\rcode{?}:}
+\paragraph{\rcode{?}:} For each user-visible object (function, data,
+etc.; see the chapter about namespaces) a help page with detailed
+information is available. To get the information for a specific
+object, use the function \rcode{help()} or the shortcut \rcode{?}.
+
+<<eval=FALSE>>=
+help(ls)
+?ls
+@ 
+
+Note that keywords and special functions (e.g., \rcode{if} or
+\rcode{[[}) must be enclosed in quotes.
+
+<<eval=FALSE>>=
+?"if"
+@ 
+
+
+
+\paragraph{Help topic:} A help page always contains a description, a
+usage section and a description of all arguments. It also can contain
+a details section, references and links to similar functions (the ``see
+also'' section). 
+
+Often a help page has an example section to demonstrate the function's
+usage. The examples on a help topic can normally be run by
+\rcode{example("topic")}.
+
+<<eval=FALSE>>=
+example("ls")
+@ 
+
+
+
+\paragraph{Search:} 
+
 
 
 \paragraph{Manuals:}
@@ -137,8 +181,7 @@ backslash (\rcode{\textbackslash}).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Language}
 
-\paragraph{Object:}
-\paragraph{Expression:} Command, statement
+\paragraph{Object:} case-sensitive
 \paragraph{Function:}
 \paragraph{Comment:}
 <<>>=

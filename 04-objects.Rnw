@@ -1,0 +1,9 @@
+\SweaveOpts{fig.path='figs/objects-', fig.align='center',
+  fig.show='hold', tidy=FALSE, prompt=TRUE, comment=''}
+
+
+\progrchapternumber{0}
+\progrchapter{Data Objects}
+\progrchapterabstract{
+Data objects in R.
+}

@@ -1,0 +1,22 @@
+
+\SweaveOpts{fig.path='figs/language-', fig.align='center',
+  fig.show='hold', tidy=FALSE, prompt=TRUE, comment=''}
+
+
+\progrchapternumber{x}
+\progrchapter{Computing on the Language}
+\progrchapterabstract{
+
+}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\paragraph{Call:} unevaluated ``input'', ``statement'', ``command''
+\paragraph{Expression:} a list of calls
+<<>>=
+1 + 1; a <- 1;
+e <- expression(1+1, a <- 1)
+@ 

@@ -21,7 +21,7 @@
 
 \newcommand{\progrchapternumber}[1]{\setcounter{chapter}{#1}}
 \newcommand{\progrchapter}[1]{\chapter{#1}}
-\newcommand{\progrchapterabstract}[1]{#1 \\ \rule{\textwidth}{0.5pt}\bigskip}
+\newcommand{\progrchapterabstract}[1]{\noindent\textbf{#1}\bigskip}
 
 \newcommand{\seealso}[1]{\textit{See also:}~#1}
 \newcommand{\rcode}[1]{\texttt{#1}}
