@@ -5,25 +5,24 @@
   fig.show='hold', tidy=FALSE, prompt=TRUE, comment=''}
 
 
+\progrtitlepage{1}{Basic Vocabulary}
 \progrchapternumber{0}
 \progrchapter{Basic Vocabulary}
-\progrchapterabstract{
+\progrchapterabstract{%
 The basic vocabulary you should know to read this book.
 }
 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-R is a language and environment for statistical computing and
-graphics. 
+The main literature for this section is:
+\begin{itemize}
+  \item \textit{Software for Data Analysis: Programming with R} by
+    \citet{Chambers@2008}
+  \item \textit{An Introduction to R} by \citet{Rintro}
+  \item \textit{R Language Definition} by \citet{Rlang}
+\end{itemize}
 
-<<>>=
-citation()
-@ 
-
-<<>>=
-contributors()
-@ 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -36,16 +35,21 @@ R, it issues a prompt waiting for input. The default prompt is
 1 + 1
 @
 
-The input is called an \textbf{expression}. If the user enters a
+The input is called an \textbf{expression}. If the user gives a
 complete expression, R evaluates the expression and shows the output
 immediatley. If---after the user has pressed \texttt{Enter}---the
 input can not be interpreted as a complete expression, R keeps
 prompting for more input showing a
 ``\rcode{\Sexpr{options()$continue}}''. %$
+
 <<>>=
 1 +
 2
 @
+
+If the output is a vector R indicates the index of the left-most
+element in each line; in the example above with \rcode{[1]}.
+
 
 \seealso{
   \rcode{?options} to change global options which affect the
@@ -65,7 +69,7 @@ the \textbf{workspace} of the current session.
 
 
 \paragraph{Objects:} During an R session \textbf{objects} are created
-and stored by name.
+and stored by name (case-sensitive).
 <<>>=
 a <- 1 + 1
 a
@@ -97,9 +101,9 @@ not. If approvied, the objects are written to a file called
 command lines used in the session are saved to a file called
 \rcode{.Rhistory}.
 
-When R is started at later time from the same directory it reloads the
-workspace from this file and the associated commands history is
-reloaded.
+When R is started at later time from the same directory it
+automatically reloads the workspace from this file and the associated
+commands history is reloaded.
 
 Note that files starting with a \rcode{.} are normally hidden files,
 and you have to explicitly indicate in your operating system (or
@@ -115,7 +119,7 @@ shell, or Explorer, etc.) that you want to see these files.
 
 \paragraph{Working directory:} The working directory is the default
 directory where all ``things'' (workspace, figures, etc.) are stored
-or looked for (source files, etc.), when no specific path is stated.
+or looked for (source files, etc.) when no specific path is stated.
 
 The function \rcode{getwd()} returns the current workspace, the
 function \rcode{setwd()} sets the current workspace.
@@ -135,45 +139,73 @@ backslash (\rcode{\textbackslash}).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Help}
 
-\paragraph{\rcode{?}:} For each user-visible object (function, data,
-etc.; see the chapter about namespaces) a help page with detailed
-information is available. To get the information for a specific
-object, use the function \rcode{help()} or the shortcut \rcode{?}.
+\paragraph{\rcode{?}:} For each user-visible object (function, data
+set, etc.; see the chapter about namespaces to learn what user-visible
+means) a help page with detailed information is available. To get the
+information for a specific object, use the function \rcode{help()} or
+the shortcut \rcode{?}.
 
 <<eval=FALSE>>=
 help(ls)
 ?ls
-@ 
+@
 
 Note that keywords and special functions (e.g., \rcode{if} or
 \rcode{[[}) must be enclosed in quotes.
 
 <<eval=FALSE>>=
 ?"if"
-@ 
+@
 
 
 
 \paragraph{Help topic:} A help page always contains a description, a
-usage section and a description of all arguments. It also can contain
-a details section, references and links to similar functions (the ``see
-also'' section). 
+usage section and a description of all arguments. It can contain a
+details section, references and links to similar functions (the ``see
+also'' section).
 
-Often a help page has an example section to demonstrate the function's
-usage. The examples on a help topic can normally be run by
+Often an example section demonstrates the function's usage; the
+examples on a help topic can normally be run by
 \rcode{example("topic")}.
 
 <<eval=FALSE>>=
 example("ls")
-@ 
+@
 
 
 
-\paragraph{Search:} 
+\paragraph{Search:} If the the concrete function name, data set name,
+etc. is unknown, one can search the complete help system using the
+function \rcode{help.search} or the shortcut \rcode{??}.
+
+<<>>=
+help.search("linear models")
+??"subset"
+@
+
+This results in a list with matched objects, each entry of the type
+\rcode{PKG::FOO}. \rcode{FOO} is the the name of the function, data
+set, etc. and \rcode{PKG} the package where \rcode{FOO} is in.
+
+Note that the option \rcode{help.search.types} specifies the different
+``things'' to search through.
+
+<<>>=
+getOption("help.search.types")
+@
+
+\seealso{
+  The add-on package \rcode{sos} provides extended search
+  functionality to quickly and flexibly search and find help pages,
+  data sets, variables in data sets, etc.
+}
 
 
 
-\paragraph{Manuals:}
+\paragraph{Hypertext Documentation:} R is shiped with a comprehensive
+hypertext documentation; execute \rcode{help.start()} to open a
+browser with the HTML version of R's online documentation. There you
+find Manuals, the documentation for all packages, etc.
 
 
 
@@ -181,26 +213,176 @@ example("ls")
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Language}
 
-\paragraph{Object:} case-sensitive
-\paragraph{Function:}
-\paragraph{Comment:}
+\paragraph{Object:} Everything in R is an object; and these objects
+are referred to through \textbf{symbols} (often also called names or
+variables). The symbols are case-sensitive.
+
+<<>>=
+x <- 1
+x
+X <- "a"
+X
+@
+In this example \rcode{x} is the symbol which refers to an object with
+the value \rcode{1} and \rcode{X} is the symbol which refers to an
+object with the values \rcode {a}.
+
+
+
+\paragraph{Function:} Functions (and similar constructs) are the
+workhorses of R. Functions are invoked by name followed by a list of
+\textbf{arguments} separated by commas in parentheses. Each function
+has a  \textbf{return value}, i.e., the result of the computations in
+the function as an R object.
+
+<<>>=
+identity(1:3)
+@
+
+In this example the function \rcode{identity()} is called with one
+argument, the vector of integers from 1 to 3. As this function is the
+identity, the return value is the same vector.
+
+Note that if the function name given without parentheses, the source
+code of the function is displayed.
+
+<<>>=
+identity
+@
+
+
+
+\paragraph{Operator:} Operators are functions with a different calling
+syntax. Typical operators are the binary arithmetic operators
+\rcode{+}, \rcode{-}, etc. or the unary arithmetic operator
+\rcode{-}.
+
+<<>>=
+1 + 1
+-1
+@
+
+Operators also can be called like ordinary functions by quoting the
+operator names using backticks \rcode{`op`}.
+
+<<>>=
+`+`(1, 1)
+`-`(1)
+@
+
+\seealso{
+  \rcode{?Syntax} for operator syntax and precedence; follow the ``See
+  Also'' to arithmetic, relational, logical, etc. operators.
+}
+
+
+
+\paragraph{Vector:} The most basic objects are vectors of various
+types, e.g., numbers. There are no scalar object types underlying
+them. Single numbers (or other types) are still vectors, of length 1.
+
+<<>>=
+x <- 4.2
+length(x)
+is.vector(x)
+@
+
+This concept allows \textbf{vectorizing computations}---the execution
+of an expression for each element of vector without using an explicit
+loop.
+
+<<>>=
+x <- c(4.2, 13, 5)
+cos(x)
+x + 1
+@
+
+
+
+\paragraph{Comment:} Comments are ignored by R. Any text from a
+\rcode{\#} character to the end of the line is taken to be a comment.
+
 <<>>=
 # This is a comment line
 1 + 1  # A Computation
 @
-\paragraph{Operator:}
-\paragraph{Environment:}
 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Packages}
 
-\paragraph{Package:}
-\paragraph{CRAN:}
-\paragraph{R-Forge:}
-\paragraph{Repository:}
-\paragraph{Library:}
+\paragraph{Package:} All R functions and datasets are stored in
+packages. Only when a package is loaded are its contents available.
+
+Execute \rcode{search()} to see which packages are currently loaded
+and therefore which functions, data sets, etc. are available to use.
+
+<<>>=
+search()
+@
+
+In order to see which packages are installed and available to load,
+issue the function \rcode{library()} function without an argument. To
+load a package use the \rcode{library()} or \rcode{require()}
+functions and the package's name as first argument.
+
+<<eval=FALSE>>=
+library("tools")
+@
+
+Execute \rcode{detach("package:tools")} to unload a package.
+
+
+\seealso{
+  \rcode{.packages()} returns information about package availability.
+}
+
+
+
+\paragraph{Package installation:} The R distribution comes with some
+base packages. Other add-on packages have to be installed from a
+\textbf{repository} like \textbf{CRAN}.
+
+<<eval=FALSE>>=
+install.packages("archetypes")
+@
+
+In this example a package with the name \rcode{archetypes} is
+installed from \textbf{CRAN} into a local \textbf{library} tree.
+
+
+\seealso{
+  Use \rcode{update.packages()} to update all packages; or
+  \rcode{download.packages()} to just download a package without
+  installation.
+}
+
+
+
+\paragraph{Repository:} Repositories are places where a set of
+packages are hosted and ready for installation. Prominent ones are
+\href{http://cran.r-project.org/}{CRAN} and
+\href{http://www.bioconductor.org/}{Bioconductor}.
+
+
+
+\paragraph{Library:} Libraries or library trees are local search paths
+where packages are installed and looked for. Execute
+\rcode{.libPaths()} to see the current paths.
+
+<<>>=
+.libPaths()
+@
+
+The list of paths is ordered, i.e., R tries to install a package in
+the first directory, then in the second, etc.
+
+
+\seealso{
+  See \rcode{?.libPaths} for the environment variables which define
+  these paths.
+}
 
 
 
@@ -208,3 +390,9 @@ example("ls")
 \section{Editors}
 
 
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bibliographystyle{plainnat}
+\bibliography{references}

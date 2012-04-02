@@ -1,0 +1,23 @@
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\textbf{R} is a language and environment for statistical computing and
+graphics. It is a dialect of the \textbf{S} language--a language
+developed by John Chambers and others at the Bell Labs \citep[see][a
+website  explaining the evoluation of S in detail]{Chambers@2000}.
+
+R was started by Ross Ihaka and Robert Gentleman in 1992. Since 1997
+the R source code is controled by the R Core Group; execute
+<<eval=FALSE>>=
+contributors()
+@
+to see its members.
+
+\citep{Hornik@2008}
+
+open source
+
+<<>>=
+citation()
+@
+

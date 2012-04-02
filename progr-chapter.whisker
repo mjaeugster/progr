@@ -1,5 +1,7 @@
 \documentclass[a4paper,parskip=half]{scrreprt}
 
+\usepackage{natbib}
+\setcitestyle{round}
 \usepackage{xcolor}
 \definecolor{Red}{rgb}{0.5,0,0}
 \definecolor{Blue}{rgb}{0,0,0.5}
@@ -19,9 +21,23 @@
   pdfview = {XYZ null null null},
 }
 
+
 \newcommand{\progrchapternumber}[1]{\setcounter{chapter}{#1}}
 \newcommand{\progrchapter}[1]{\chapter{#1}}
-\newcommand{\progrchapterabstract}[1]{\noindent\textbf{#1}\bigskip}
+\newcommand{\progrchapterabstract}[1]{\vspace{-2em}\textbf{#1}\\[1em]}
+\newcommand{\progrtitlepage}[2]{
+\begin{titlepage}
+  {\Large Manuel J. A. Eugster}\\[3em]
+  {\usekomafont{title}{\Huge Programming R}}\\[2em]
+  {\usekomafont{subtitle}{\Large Chapter #1: #2 }}\\[2em]
+  Last modification on \today \\
+  \vfill
+  Draft of the R programming book I always wanted to read\\
+  \url{http://mjaeugster.github.com/progr}\\
+  Licensed under the \href{http://creativecommons.org/licenses/by-nc-sa/3.0/}{CC BY-NC-SA}
+\end{titlepage}
+}
+
 
 \newcommand{\seealso}[1]{\textit{See also:}~#1}
 \newcommand{\rcode}[1]{\texttt{#1}}
@@ -29,19 +45,8 @@
 
 \begin{document}
 
-\begin{titlepage}
-  {\Large Manuel J. A. Eugster}\\[3em]
-  {\usekomafont{title}{\Huge Programming R}}\\[2em]
-  {\usekomafont{subtitle}{\Large Chapter {{ch_number}}: {{ch_title}} }}\\[2em]
-  Last modification on {{ch_mtime}} \\
-  \vfill
-  This is a draft of the R programming book I always wanted to read.\\
-  \url{http://mjaeugster.github.com/progr}\\
-  Which CC license?
-\end{titlepage}
 
 <<jargon, child='{{ch_file}}', eval=TRUE>>=
 @
-
 
 \end{document}
