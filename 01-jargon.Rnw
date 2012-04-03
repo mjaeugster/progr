@@ -1,5 +1,5 @@
 
-\Sexpr{set_parent('progr-chapter.whisker')}
+\Sexpr{set_parent('master.tex')}
 
 \SweaveOpts{fig.path='figs/jargon-', fig.align='center',
   fig.show='hold', tidy=FALSE, prompt=TRUE, comment=''}
@@ -37,7 +37,7 @@ R, it issues a prompt waiting for input. The default prompt is
 
 The input is called an \textbf{expression}. If the user gives a
 complete expression, R evaluates the expression and shows the output
-immediatley. If---after the user has pressed \texttt{Enter}---the
+immediately. If---after the user has pressed \texttt{Enter}---the
 input can not be interpreted as a complete expression, R keeps
 prompting for more input showing a
 ``\rcode{\Sexpr{options()$continue}}''. %$
@@ -96,7 +96,7 @@ workspace. There, all objects of a session are stored. Use
 
 At the end of an R session (indicated, e.g., by executing
 \rcode{q()}), the user is asked to save the current workspace or
-not. If approvied, the objects are written to a file called
+not. If approved, the objects are written to a file called
 \rcode{.RData} in the \textbf{current working directory}, and the
 command lines used in the session are saved to a file called
 \rcode{.Rhistory}.
@@ -202,7 +202,7 @@ getOption("help.search.types")
 
 
 
-\paragraph{Hypertext Documentation:} R is shiped with a comprehensive
+\paragraph{Hypertext Documentation:} R is shipped with a comprehensive
 hypertext documentation; execute \rcode{help.start()} to open a
 browser with the HTML version of R's online documentation. There you
 find Manuals, the documentation for all packages, etc.
@@ -283,8 +283,8 @@ them. Single numbers (or other types) are still vectors, of length 1.
 
 <<>>=
 x <- 4.2
-length(x)
 is.vector(x)
+length(x)
 @
 
 This concept allows \textbf{vectorizing computations}---the execution
@@ -313,7 +313,8 @@ x + 1
 \section{Packages}
 
 \paragraph{Package:} All R functions and datasets are stored in
-packages. Only when a package is loaded are its contents available.
+packages. Only when a package is loaded (attached) its content is
+available.
 
 Execute \rcode{search()} to see which packages are currently loaded
 and therefore which functions, data sets, etc. are available to use.
@@ -342,14 +343,14 @@ Execute \rcode{detach("package:tools")} to unload a package.
 
 \paragraph{Package installation:} The R distribution comes with some
 base packages. Other add-on packages have to be installed from a
-\textbf{repository} like \textbf{CRAN}.
+\textbf{repository} like CRAN (the default repository).
 
 <<eval=FALSE>>=
 install.packages("archetypes")
 @
 
 In this example a package with the name \rcode{archetypes} is
-installed from \textbf{CRAN} into a local \textbf{library} tree.
+installed from CRAN into a local \textbf{library tree}.
 
 
 \seealso{
@@ -360,15 +361,27 @@ installed from \textbf{CRAN} into a local \textbf{library} tree.
 
 
 
-\paragraph{Repository:} Repositories are places where a set of
-packages are hosted and ready for installation. Prominent ones are
+\paragraph{Repository:} Repositories are places (websites) where a set
+of packages are hosted and ready for installation. Prominent ones are
 \href{http://cran.r-project.org/}{CRAN} and
 \href{http://www.bioconductor.org/}{Bioconductor}.
 
+A global option defines the default repository used by
+\rcode{install.packages()}.
+
+<<>>=
+getOption("repos")
+@
+
+\seealso{
+  \rcode{chooseCRANmirror()} to set a CRAN mirror.
+}
 
 
-\paragraph{Library:} Libraries or library trees are local search paths
-where packages are installed and looked for. Execute
+
+\paragraph{Library:} Libraries or library trees are local directories
+where packages are installed (by \rcode{install.packages())} and
+looked for (by \rcode{library()} and \rcode{require()}). Execute
 \rcode{.libPaths()} to see the current paths.
 
 <<>>=
@@ -386,22 +399,103 @@ the first directory, then in the second, etc.
 
 
 
+\paragraph{Package content:} An R package typically contains some
+functions, data sets, and documentation of both. To get an overview
+execute \rcode{library(help = "package")} or look at its hypertext
+documentation (execute \rcode{help.start()} and follow the links
+``Packages'' and the package title).
+
+<<eval=FALSE>>=
+library(help = "archetypes")
+@
+
+To get a list of a package's data sets and to load a specific one use
+the \rcode{data()} function.
+<<eval=FALSE>>=
+data(package = "archetypes")
+data("body", package = "archetypes")
+@
+
+Demos are longer examples that demonstrate some of the functionality
+of the package. To get a list of a package's demos and to execute a
+specific one use the \rcode{demo()} function.
+<<eval=FALSE>>=
+demo(package = "archetypes")
+demo("robust-ozone", package = "archetypes")
+@
+To see the demo's source code execute:
+<<eval=FALSE>>=
+edit(file = system.file("demo", "robust-ozone.R",
+     package = "archetypes"))
+@
+
+
+Vignettes are (typically) detailed descriptions of parts of a
+package. To get a list of a package's vignettes and to open a specific
+one use the \rcode{vignette()} function.
+<<eval=FALSE>>=
+vignette(package = "archetypes")
+vignette("archetypes", package = "archetypes")
+@
+To see the vignette's source code execute:
+<<eval=FALSE>>=
+edit(vignette("archetypes", package = "archetypes"))
+@
+
+
+\seealso{
+  \rcode{browseVignettes()} lists available vignettes in an HTML
+  browser with links to PDF, LaTeX/noweb source, and (tangled) R code
+  (if available).
+}
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Source}
+\section{Scripts}
+
+R, as already said, uses a simple command line interface. In fact, one
+operates in a (infinite) \textbf{read-eval-print loop} (REPL): the
+user enters an expression (read), the expression is evaluated (eval),
+and the result is displayed (print)---and this is repeated until the
+user enters \rcode{q()}.
+
+This interactivity is nice to learn the language, to explore R and to
+do short analysis, however, it is unhandy to make long, complex, and
+reproducible analysis or to enhance R with own
+functionality. Therefore, it is much more comfortable to maintain all
+expressions in a separate script file (with the ending \rcode{.R}).
+
+Let's say a script file \rcode{basic-1.R} is in the current working
+directory with the following content:
+\begin{verbatim}
+a <- 2:8
+b <- pi
+c <- a * b
+save(c, file = "res.RData")
+\end{verbatim}
+Then one can execute the complete script at once by using the
+\rcode{source()} function.
+
+<<eval=FALSE>>=
+source("basic-1.R")
+@
+
+The usage of R scripts has the advantage that all steps of a project
+are collected in one (or more) script files, changes are very easy to
+accomplish, and each step of the project can be reproduced at any
+time. The loss of interactivity can be regained by using an
+appropriate \textbf{editor} for R scripts.
 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Editors}
 
-R, as already said, uses a simple command line interface.
-
-This makes
-reproducible work not easy---one can save the workspace and the
-command history, but this does not necessarily represent the concrete
-workflow. Additionally, 
-
-
+Programmers need the best tools to do their job. One important tool is
+the editor they use to write source code. Appropriate editors for R
+scripts (in my point of view) are RStudio \citep{RStudio} and
+Emacs+ESS \citep{ESS}.
 
 
 

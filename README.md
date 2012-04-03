@@ -4,22 +4,21 @@
 
 
 ## Contents
-   - Basics
+   - R Programming
      1. Basic Vocabulary
      2. Navigate through R
      3. Coding Conventions
      4. Objects
      5. 
 
-   - Advanced
      - Error Handling 
      - Profiling
-     - Internals
-     -  
 
-   - Packages
+   - Package development
 
-   - Advanced II
+   - Advanced R Programming
      - Computing on the Language
-     - Formulas
+       - Formulas
+     - Internals
      - Computing on Packages
+ 
