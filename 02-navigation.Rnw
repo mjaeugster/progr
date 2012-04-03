@@ -1,33 +1,54 @@
 
+\Sexpr{set_parent('master.tex')}
+
 \SweaveOpts{fig.path='figs/navigation-', fig.align='center',
   fig.show='hold', tidy=FALSE, prompt=TRUE, comment=''}
 
 
-\progrchapter{Navigation}
-\progrsectionabstract{
-  Navigate through R; first steps in finding, reading, debugging,
-  etc. R objects.
+
+\progrtitlepage{2}{Navigate through R}
+\progrchapternumber{1}
+\progrchapter{Navigate through R}
+\progrchapterabstract{%
+  First steps in finding, reading, debugging, etc. R objects.
 }
 
 
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The main literature for this section is:
+\begin{itemize}
+  \item \textit{Software for Data Analysis: Programming with R} by
+    \citet{Chambers@2008}
+  \item \textit{R Language Definition} by \citet{Rlang}
+\end{itemize}
 
 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Global environment}
+<<>>=
+x <- 1
+@
+
+
+<<>>=
+find("ls")
+ls
+@
+
+
+<<>>=
+mean
+@
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Environments}
 
-<<>>=
-globalenv()
-ls(envir = globalenv())
-@
-
-<<>>=
-
-@
 
 
-
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bibliographystyle{plainnat}
+\bibliography{references}

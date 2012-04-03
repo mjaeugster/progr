@@ -90,9 +90,10 @@ Execute \rcode{rm(list = ls())} to remove all currently stored objects.
 
 
 
-\paragraph{\vocab{Workspace}:} The ``container'' of an R session is
-called the workspace. There, all objects of a session are stored. Use
-\rcode{ls()} to list all objects of the current workspace.
+\paragraph{\vocab{Workspace}:} The \textbf{environment} of an R
+session is called the workspace. There, all objects of a session are
+stored. Use \rcode{ls()} to list all objects of the current
+workspace.
 
 At the end of an R session (indicated, e.g., by executing
 \rcode{q()}), the user is asked to save the current workspace or
