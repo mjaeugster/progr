@@ -387,7 +387,19 @@ the first directory, then in the second, etc.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Source}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Editors}
+
+R, as already said, uses a simple command line interface.
+
+This makes
+reproducible work not easy---one can save the workspace and the
+command history, but this does not necessarily represent the concrete
+workflow. Additionally, 
 
 
 
