@@ -28,15 +28,15 @@ The main literature for this section is:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Session}
 
-\paragraph{Console:} R is a command line interpreter---when you start
-R, it issues a prompt waiting for input. The default prompt is
-``\rcode{\Sexpr{options()$prompt}}''. %$
+\paragraph{\vocab{Console}:} R is a command line interpreter---when
+you start R, it issues a prompt waiting for input. The default prompt
+is ``\rcode{\Sexpr{options()$prompt}}''. %$
 <<>>=
 1 + 1
 @
 
-The input is called an \textbf{expression}. If the user gives a
-complete expression, R evaluates the expression and shows the output
+The input is called an \textbf{\vocab{expression}}. If the user gives
+a complete expression, R evaluates the expression and shows the output
 immediately. If---after the user has pressed \texttt{Enter}---the
 input can not be interpreted as a complete expression, R keeps
 prompting for more input showing a
@@ -58,17 +58,17 @@ element in each line; in the example above with \rcode{[1]}.
 
 
 
-\paragraph{Session:} A session starts when you start up R and ends
-when you quit R.
+\paragraph{\vocab{Session}:} A session starts when you start up R and
+ends when you quit R.
 <<eval=FALSE>>=
 q()
 @
 The function to quit the current R session asks if you want to save
-the \textbf{workspace} of the current session.
+the \textbf{\vocab{workspace}} of the current session.
 
 
 
-\paragraph{Objects:} During an R session \textbf{objects} are created
+\paragraph{\vocab{Objects}:} During an R session objects are created
 and stored by name (case-sensitive).
 <<>>=
 a <- 1 + 1
@@ -90,15 +90,15 @@ Execute \rcode{rm(list = ls())} to remove all currently stored objects.
 
 
 
-\paragraph{Workspace:} The ``container'' of an R session is called the
-workspace. There, all objects of a session are stored. Use
+\paragraph{\vocab{Workspace}:} The ``container'' of an R session is
+called the workspace. There, all objects of a session are stored. Use
 \rcode{ls()} to list all objects of the current workspace.
 
 At the end of an R session (indicated, e.g., by executing
 \rcode{q()}), the user is asked to save the current workspace or
 not. If approved, the objects are written to a file called
-\rcode{.RData} in the \textbf{current working directory}, and the
-command lines used in the session are saved to a file called
+\rcode{.RData} in the \textbf{current \vocab{working directory}}, and
+the command lines used in the session are saved to a file called
 \rcode{.Rhistory}.
 
 When R is started at later time from the same directory it
@@ -117,9 +117,10 @@ shell, or Explorer, etc.) that you want to see these files.
 
 
 
-\paragraph{Working directory:} The working directory is the default
-directory where all ``things'' (workspace, figures, etc.) are stored
-or looked for (source files, etc.) when no specific path is stated.
+\paragraph{\vocab{Working directory}:} The working directory is the
+default directory where all ``things'' (workspace, figures, etc.) are
+stored or looked for (source files, etc.) when no specific path is
+stated.
 
 The function \rcode{getwd()} returns the current workspace, the
 function \rcode{setwd()} sets the current workspace.
@@ -139,7 +140,7 @@ backslash (\rcode{\textbackslash}).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Help}
 
-\paragraph{\rcode{?}:} For each user-visible object (function, data
+\paragraph{\rcode{\vocab{?}}:} For each user-visible object (function, data
 set, etc.; see the chapter about namespaces to learn what user-visible
 means) a help page with detailed information is available. To get the
 information for a specific object, use the function \rcode{help()} or
@@ -159,10 +160,10 @@ Note that keywords and special functions (e.g., \rcode{if} or
 
 
 
-\paragraph{Help topic:} A help page always contains a description, a
-usage section and a description of all arguments. It can contain a
-details section, references and links to similar functions (the ``see
-also'' section).
+\paragraph{\vocab{Help topic}:} A help page always contains a
+description, a usage section and a description of all arguments. It
+can contain a details section, references and links to similar
+functions (the ``see also'' section).
 
 Often an example section demonstrates the function's usage; the
 examples on a help topic can normally be run by
@@ -174,9 +175,9 @@ example("ls")
 
 
 
-\paragraph{Search:} If the the concrete function name, data set name,
-etc. is unknown, one can search the complete help system using the
-function \rcode{help.search} or the shortcut \rcode{??}.
+\paragraph{\vocab{Search}:} If the the concrete function name, data
+set name, etc. is unknown, one can search the complete help system
+using the function \rcode{help.search} or the shortcut \rcode{??}.
 
 <<>>=
 help.search("linear models")
@@ -202,10 +203,11 @@ getOption("help.search.types")
 
 
 
-\paragraph{Hypertext Documentation:} R is shipped with a comprehensive
-hypertext documentation; execute \rcode{help.start()} to open a
-browser with the HTML version of R's online documentation. There you
-find Manuals, the documentation for all packages, etc.
+\paragraph{\vocab{Hypertext Documentation}:} R is shipped with a
+comprehensive hypertext documentation; execute \rcode{help.start()} to
+open a browser with the HTML version of R's online
+documentation. There you find Manuals, the documentation for all
+packages, etc.
 
 
 
@@ -213,9 +215,9 @@ find Manuals, the documentation for all packages, etc.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Language}
 
-\paragraph{Object:} Everything in R is an object; and these objects
-are referred to through \textbf{symbols} (often also called names or
-variables). The symbols are case-sensitive.
+\paragraph{\vocab{Object}:} Everything in R is an object; and these
+objects are referred to through \textbf{\vocab{symbols}} (often also
+called names or variables). The symbols are case-sensitive.
 
 <<>>=
 x <- 1
@@ -229,11 +231,11 @@ object with the values \rcode {a}.
 
 
 
-\paragraph{Function:} Functions (and similar constructs) are the
+\paragraph{\vocab{Function}:} Functions (and similar constructs) are the
 workhorses of R. Functions are invoked by name followed by a list of
-\textbf{arguments} separated by commas in parentheses. Each function
-has a  \textbf{return value}, i.e., the result of the computations in
-the function as an R object.
+\textbf{\vocab{arguments}} separated by commas in parentheses. Each
+function has a  \textbf{\vocab{return value}}, i.e., the result of the
+computations in the function as an R object.
 
 <<>>=
 identity(1:3)
@@ -252,10 +254,9 @@ identity
 
 
 
-\paragraph{Operator:} Operators are functions with a different calling
-syntax. Typical operators are the binary arithmetic operators
-\rcode{+}, \rcode{-}, etc. or the unary arithmetic operator
-\rcode{-}.
+\paragraph{\vocab{Operator}:} Operators are functions with a different
+calling syntax. Typical operators are the binary arithmetic operators
+\rcode{+}, \rcode{-}, etc. or the unary arithmetic operator \rcode{-}.
 
 <<>>=
 1 + 1
@@ -277,9 +278,10 @@ operator names using backticks \rcode{`op`}.
 
 
 
-\paragraph{Vector:} The most basic objects are vectors of various
-types, e.g., numbers. There are no scalar object types underlying
-them. Single numbers (or other types) are still vectors, of length 1.
+\paragraph{\vocab{Vector}:} The most basic objects are vectors of
+various types, e.g., numbers. There are no scalar object types
+underlying them. Single numbers (or other types) are still vectors, of
+length 1.
 
 <<>>=
 x <- 4.2
@@ -287,9 +289,9 @@ is.vector(x)
 length(x)
 @
 
-This concept allows \textbf{vectorizing computations}---the execution
-of an expression for each element of vector without using an explicit
-loop.
+This concept allows \textbf{\vocab{vectorizing computations}}---the
+execution of an expression for each element of vector without using an
+explicit loop.
 
 <<>>=
 x <- c(4.2, 13, 5)
@@ -299,8 +301,9 @@ x + 1
 
 
 
-\paragraph{Comment:} Comments are ignored by R. Any text from a
-\rcode{\#} character to the end of the line is taken to be a comment.
+\paragraph{\vocab{Comment}:} Comments are ignored by R. Any text from
+a \rcode{\#} character to the end of the line is taken to be a
+comment.
 
 <<>>=
 # This is a comment line
@@ -312,8 +315,8 @@ x + 1
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Packages}
 
-\paragraph{Package:} All R functions and datasets are stored in
-packages. Only when a package is loaded (attached) its content is
+\paragraph{\vocab{Package}:} All R functions and datasets are stored
+in packages. Only when a package is loaded (attached) its content is
 available.
 
 Execute \rcode{search()} to see which packages are currently loaded
@@ -341,16 +344,16 @@ Execute \rcode{detach("package:tools")} to unload a package.
 
 
 
-\paragraph{Package installation:} The R distribution comes with some
-base packages. Other add-on packages have to be installed from a
-\textbf{repository} like CRAN (the default repository).
+\paragraph{\vocab{Package installation}:} The R distribution comes
+with some base packages. Other add-on packages have to be installed
+from a \textbf{\vocab{repository}} like CRAN (the default repository).
 
 <<eval=FALSE>>=
 install.packages("archetypes")
 @
 
 In this example a package with the name \rcode{archetypes} is
-installed from CRAN into a local \textbf{library tree}.
+installed from CRAN into a local \textbf{\vocab{library tree}}.
 
 
 \seealso{
@@ -361,8 +364,9 @@ installed from CRAN into a local \textbf{library tree}.
 
 
 
-\paragraph{Repository:} Repositories are places (websites) where a set
-of packages are hosted and ready for installation. Prominent ones are
+\paragraph{\vocab{Repository}:} Repositories are places (websites)
+where a set of packages are hosted and ready for
+installation. Prominent ones are
 \href{http://cran.r-project.org/}{CRAN} and
 \href{http://www.bioconductor.org/}{Bioconductor}.
 
@@ -379,10 +383,10 @@ getOption("repos")
 
 
 
-\paragraph{Library:} Libraries or library trees are local directories
-where packages are installed (by \rcode{install.packages())} and
-looked for (by \rcode{library()} and \rcode{require()}). Execute
-\rcode{.libPaths()} to see the current paths.
+\paragraph{\vocab{Library}:} Libraries or library trees are local
+directories where packages are installed (by
+\rcode{install.packages())} and looked for (by \rcode{library()} and
+\rcode{require()}). Execute \rcode{.libPaths()} to see the current paths.
 
 <<>>=
 .libPaths()
@@ -399,24 +403,24 @@ the first directory, then in the second, etc.
 
 
 
-\paragraph{Package content:} An R package typically contains some
-functions, data sets, and documentation of both. To get an overview
-execute \rcode{library(help = "package")} or look at its hypertext
-documentation (execute \rcode{help.start()} and follow the links
-``Packages'' and the package title).
+\paragraph{\vocab{Package content}:} An R package typically contains
+some functions, data sets, and documentation of both. To get an
+overview execute \rcode{library(help = "package")} or look at its
+hypertext documentation (execute \rcode{help.start()} and follow the
+links ``Packages'' and the package title).
 
 <<eval=FALSE>>=
 library(help = "archetypes")
 @
 
-To get a list of a package's data sets and to load a specific one use
-the \rcode{data()} function.
+To get a list of a package's \vocab{data} sets and to load a specific
+one use the \rcode{data()} function.
 <<eval=FALSE>>=
 data(package = "archetypes")
 data("body", package = "archetypes")
 @
 
-Demos are longer examples that demonstrate some of the functionality
+\vocab{Demos} are longer examples that demonstrate some of the functionality
 of the package. To get a list of a package's demos and to execute a
 specific one use the \rcode{demo()} function.
 <<eval=FALSE>>=
@@ -430,7 +434,7 @@ edit(file = system.file("demo", "robust-ozone.R",
 @
 
 
-Vignettes are (typically) detailed descriptions of parts of a
+\vocab{Vignettes} are (typically) detailed descriptions of parts of a
 package. To get a list of a package's vignettes and to open a specific
 one use the \rcode{vignette()} function.
 <<eval=FALSE>>=
@@ -455,16 +459,17 @@ edit(vignette("archetypes", package = "archetypes"))
 \section{Scripts}
 
 R, as already said, uses a simple command line interface. In fact, one
-operates in a (infinite) \textbf{read-eval-print loop} (REPL): the
-user enters an expression (read), the expression is evaluated (eval),
-and the result is displayed (print)---and this is repeated until the
-user enters \rcode{q()}.
+operates in a (infinite) \textbf{\vocab{read-eval-print loop}} (REPL):
+the user enters an expression (read), the expression is evaluated
+(eval), and the result is displayed (print)---and this is repeated
+until the user enters \rcode{q()}.
 
 This interactivity is nice to learn the language, to explore R and to
 do short analysis, however, it is unhandy to make long, complex, and
 reproducible analysis or to enhance R with own
 functionality. Therefore, it is much more comfortable to maintain all
-expressions in a separate script file (with the ending \rcode{.R}).
+expressions in one or more separate \textbf{\vocab{script}} files
+(with the ending \rcode{.R}).
 
 Let's say a script file \rcode{basic-1.R} is in the current working
 directory with the following content:
@@ -485,7 +490,7 @@ The usage of R scripts has the advantage that all steps of a project
 are collected in one (or more) script files, changes are very easy to
 accomplish, and each step of the project can be reproduced at any
 time. The loss of interactivity can be regained by using an
-appropriate \textbf{editor} for R scripts.
+appropriate \textbf{\vocab{editor}} for R scripts.
 
 
 
@@ -494,8 +499,8 @@ appropriate \textbf{editor} for R scripts.
 
 Programmers need the best tools to do their job. One important tool is
 the editor they use to write source code. Appropriate editors for R
-scripts (in my point of view) are RStudio \citep{RStudio} and
-Emacs+ESS \citep{ESS}.
+scripts (in my point of view) are \textbf{\vocab{RStudio}}
+\citep{RStudio} and \textbf{\vocab{Emacs+ESS}} \citep{ESS}.
 
 
 
