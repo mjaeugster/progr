@@ -4,10 +4,13 @@
 \SweaveOpts{fig.path='figs/navigation-', fig.align='center',
   fig.show='hold', tidy=FALSE, prompt=TRUE, comment=''}
 
+<<echo=FALSE>>=
+rm(list = ls())
+@
 
 
-\progrtitlepage{2}{Navigate through R}
-\progrchapternumber{1}
+\progrtitlepage{3}{Navigate through R}
+\progrchapternumber{2}
 \progrchapter{Navigate through R}
 \progrchapterabstract{%
   First steps in finding, reading, debugging, etc. R objects.
@@ -25,27 +28,188 @@ The main literature for this section is:
 
 
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Global environment}
+
+Everything starts in the \textbf{\vocab{global environment}}. It is
+the root of the user workspace and an assignment operation from the
+command line will cause the relevant object to belong to the global
+environment.
+
 <<>>=
 x <- 1
+ls()
 @
 
+Now, R uses different concepts---\vocab{packages}, \vocab{namespaces},
+\vocab{search paths}, \vocab{generic methods}, etc.---to make R usable
+for the users. However, these concepts make it harder to navigate
+through R---one has to have a basic understanding of the concepts to
+orient oneself.
 
+For example, the \rcode{identity()} function is not listed in the
+objects listing above, nevertheless it is available and usable:
 <<>>=
-find("ls")
-ls
+identity(1)
 @
 
-
+The \rcode{identity()} function is defined in the package:
 <<>>=
-mean
+find("identity")
 @
+It is available to the user because R maintains a \textbf{search
+  path} of attached packages
+<<>>=
+search()
+@
+and looks up the function by name first in the global environment and
+then successively in the parent environments. Attaching or detaching a
+package obviously changes the search path.
+
+The global environment object is accessible via the
+\rcode{globalenv()} function.
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Environments}
+\section{Packages}
+
+Similarly to the collection of the user-defined objects in the global
+environment, the objects defined by a package are collected in an
+environment as well. This becomes visible when printing the source
+code of a function:
+<<>>=
+identity
+@
+In the last line of the output, the environment in which the function
+is defined is listed.
+
+Be it that one has defined an object \rcode{identity} at the global
+environment:
+<<>>=
+identity <- 17
+@
+Then, obviously, two objects are found:
+<<>>=
+find("identity")
+@
+One defined in the global environment, and one in the \rcode{base}
+package. Because of the chain of environments, the object in the
+global environment is found first:
+<<>>=
+identity
+@
+In order to use the function in the \rcode{base} package, the
+\textbf{double colon operator} \rcode{::} has to be used:
+<<>>=
+base::identity(10)
+@
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Namespaces}
+
+In contrast to the global environment, not all objects of a package
+have to be visible to the user. The \textbf{namespace management
+  system} for packages allows the package author to specify, among
+other things, which objects in the package should be \textbf{exported}
+to make them available to package users.
+
+<<>>=
+library("HSAUR2")
+@
+
+In order to see the exported one has to get the namespace environment
+of a package via the \rcode{getNamespace()} function,
+<<>>=
+ns <- getNamespace("HSAUR2")
+@
+and can then receive a list of all exported objects via the
+\rcode{getNamespaceExports()} function:
+<<>>=
+getNamespaceExports(ns)
+@
+This package has only one object exported. We can access the exported
+objects of a loaded and attached package as customary by entering its
+name
+<<>>=
+HSAURtable
+@
+or, more precisely, with the double colon operator
+\rcode{HSAUR2::HSAURtable}.
+
+As a namespace is also an environment, we can simply get a list of all
+defined objects:
+<<>>=
+ls(envir = ns)
+@
+Non-exported objects, like \rcode{exename}, can not be accessed with
+the double colon operator
+<<>>=
+HSAUR2::exename
+@
+but with the \textbf{triple colon operator} \rcode{:::}
+<<>>=
+HSAUR2:::exename
+@
+
+However, notice that there is a reason why objects are not
+exported. One can not be sure that the object behaves equally in the
+next version of the object. Furthermore, documentation is only
+required for exported objects.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Generic functions (S3)}
+
+Given are two vectors, one numeric and one factor:
+<<>>=
+a <- runif(10)
+b <- gl(5, 2)
+@
+If we plot the two vectors, the same function calls results in
+different results---one scatterplot and one barplot:
+<<fig.keep='last', fig.width=5, fig.height=2>>=
+par(mfrow = c(1, 2), mar = c(4, 4, 1, 0))
+plot(a)
+plot(b)
+@
+
+The function \rcode{plot()} is, in fact, a \textbf{generic function}
+in the \textbf{S3} object system. This is a very simple mechanism for
+an object-oriented style of programming. The concrete executing
+function---now called a \textbf{method}---is determined by the class
+of the first argument.
+
+Generic functions are identifiable by the code line
+\rcode{UseMethod("name")} in their function body:
+<<>>=
+plot
+@
+
+
+
+
+
+The classes of the two example vectors are:
+<<>>=
+class(a)
+class(b)
+@
+
+
+<<eval=FALSE>>=
+methods("plot")
+@
+
+<<eval=FALSE>>=
+getS3method("plot", "factor")
+getAnywhere("plot.factor")
+graphics:::plot.factor
+@
+
 
 
 
