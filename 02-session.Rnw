@@ -1,0 +1,161 @@
+
+\Sexpr{set_parent('master.tex')}
+
+\SweaveOpts{fig.path='figs/session-', fig.align='center',
+  fig.show='hold', tidy=FALSE, prompt=TRUE, comment=''}
+
+
+\progrtitlepage{2}{Sample Session}
+\progrchapternumber{1}
+\progrchapter{Sample Session}
+\progrchapterabstract{%
+An exemplary analysis.
+}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+This is based on the analysis provided in Chapter~1 of the book
+(available as vignette int the \rcode{HSAUR2} package):
+\begin{itemize}
+  \item \textit{A Handbook of Statistical Analyses Using R} by
+    \citet{Everitt+Hothorn@2008}
+\end{itemize}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{The Forbes 2000 Ranking of the World's Biggest Companies}
+
+In this sample session the 2000 world's biggest companies are
+analyzed. The data are collected by the Forbes Magazine in 2004; and
+provided as an R object by the \rcode{HSAUR2} package.
+
+<<eval=FALSE>>=
+install.packages("HSAUR2")
+@
+
+Is the package installed, the data set object can be attach to the
+global environment (without loading the complete package).
+
+<<>>=
+data("Forbes2000", package = "HSAUR2")
+ls()
+@
+
+The data set's help page provides a detailed description of the
+variables.
+
+<<>>=
+help("Forbes2000", package = "HSAUR2")
+@
+
+Note that the shortcut \rcode{?} does not work when the package is not
+loaded.
+
+For a first inspection, take a look at the structure of the data set
+(\rcode{str()}).
+
+<<>>=
+str(Forbes2000, vec.len = 1)
+@
+
+The output of \rcode{str()} shows that \rcode{Forbes2000} is an object
+of the class \rcode{data.frame} with $\Sexpr{nrow(Forbes2000)}$
+observations of $\Sexpr{ncol(Forbes2000)}$ variables. For each
+variable, its class is listed as well as the first few observations.
+
+Use the \rcode{print()} function to see the complete data set, and the
+\rcode{head()} and \rcode{tail()} functions to see the first and last
+parts, respectively. Note that the \rcode{print()} function is
+implicitly executed when only the name of the data set is entered.
+
+Basic characteristics of the data set are provided by: \rcode{ncol()}
+for the number of variables; \rcode{nrow()} for the number of
+observations; \rcode{names()} for the variable names.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Simple Summary Statistics}
+
+A statistical overview is provided by the \rcode{summary()}
+function. It provides a meaningful summary for each variable class;
+e.g., a five-point summary plus mean for numeric variables and the
+absolute frequencies for factor variables.
+
+<<>>=
+summary(Forbes2000)
+@
+
+Common summary statistics for numerical variables are available via
+the functions \rcode{mean()}, \rcode{median()}, \rcode{range()},
+\rcode{quantile()}, etc. The absolute frequencies for a factor is
+available via the \rcode{table()} function, the number of levels via
+\rcode{nlevels} and the different levels via \rcode{levels()}.
+
+<<>>=
+median(Forbes2000$profit, na.rm = TRUE)
+range(Forbes2000$assets)
+table(Forbes2000$category)
+@
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Computing with Data}
+
+The data set is ordered according to the rank of the companies; the
+first three companies are:
+
+<<>>=
+vars <- c("name", "sales", "profits", "assets")
+Forbes2000[1:3, vars]
+@
+
+Extract the biggest companies with respect to an alternative ordering;
+e.g., the three top selling companies:
+
+<<>>=
+osales <- order(Forbes2000$sales, decreasing = TRUE)
+osales[1:3]
+@
+<<>>=
+Forbes2000[osales[1:3], vars]
+@
+
+
+\seealso{
+  Use the function \rcode{subset()} to avoid a lot of typing in
+  complex subsets.
+}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Simple Graphics}
+
+The degree of skewness of a distribution can be investigated by
+constructing histograms using the \rcode{hist()} function. For
+example, for the \rcode{marketvalue} variable:
+
+<<fig.width=4, fig.height=4>>=
+par(mar = c(4, 4, 0, 0))
+hist(Forbes2000$marketvalue, main = "", col = "darkgray")
+@
+
+Bivariate relationships of two continuous variables are usually depict
+as scatterplots. For example, the dependence of the marketvalue from
+sales (log-scaled):
+
+<<fig.width=4, fig.height=4>>=
+par(mar = c(4, 4, 0, 0))
+plot(log(marketvalue) ~ log(sales), data = Forbes2000,
+     pch = 16, col = rgb(0, 0, 0, 0.1))
+@
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bibliographystyle{plainnat}
+\bibliography{references}
