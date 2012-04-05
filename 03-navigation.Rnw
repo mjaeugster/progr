@@ -14,7 +14,7 @@ detach("package:stats4")
 \progrchapternumber{2}
 \progrchapter{Navigate through R}
 \progrchapterabstract{%
-  First steps in finding, reading, understanding, etc. R objects.
+First steps in finding, reading, understanding, etc. R objects.
 }
 
 
