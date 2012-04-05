@@ -1,0 +1,293 @@
+
+\Sexpr{set_parent('master.tex')}
+
+\SweaveOpts{fig.path='figs/conventions-', fig.align='center',
+  fig.show='hold', tidy=FALSE, prompt=FALSE, comment=''}
+
+
+\progrtitlepage{0}{Coding Conventions}
+\progrchapternumber{-1}
+\progrchapter{Coding Conventions}
+\progrchapterabstract{%
+Guidelines for a programming R.
+}
+
+
+\newenvironment{ex}%
+{%
+\begin{knitrout}%
+\definecolor{shadecolor}{rgb}{0.968627450980392, 0.968627450980392, 0.968627450980392}\color{fgcolor}%
+\begin{kframe}%
+\begin{flushleft}%
+\ttfamily\noindent}%
+{%
+\normalfont%
+\end{flushleft}%
+\end{kframe}%
+\end{knitrout}%
+}%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Parts of the coding style are based on:
+\begin{itemize}
+  \item \textit{Google's R Style Guide} by \citet{GoogleStyle}
+  \item \textit{devtools: Style guide} by \citet{WickhamStyle}
+\end{itemize}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Naming}
+
+Language should be English. If not possible you should at least use
+only \href{http://en.wikipedia.org/wiki/ASCII}{ASCII}, i.e., no
+Germanic umlauts, no accents, etc.
+
+
+\subsection{File names}
+
+File names should be lowercase words separated with hyphens (-); and
+meaningful.
+
+\textbf{Source code} files end in \rcode{.R}.
+\begin{ex}%
+  archetypes.R\\
+  archetypes-robust.R
+\end{ex}
+
+\textbf{Data} files end in \rcode{.RData}.
+\begin{ex}%
+  muc.RData
+\end{ex}
+
+\textbf{Help} files end in \rcode{.Rd}
+\begin{ex}%
+  muc.Rd\\
+  archetypes-robust.Rd
+\end{ex}
+
+
+\subsection{Symbols}
+
+Variable and function names should be lowercase; if more than one
+word, use underscore (\rcode{\_}) to separate. Try to use short but
+meaningful names.
+
+\textbf{Variable} names should be nouns; use singular/plural to
+indicate if the variable is a scalar or a vector.
+\begin{ex}%
+  ways\\
+  ret\\
+\end{ex}
+
+\textbf{Function} names should be verbs.
+\begin{ex}%
+  print\\
+  print\_headers
+\end{ex}
+
+\textbf{Data frame variable} names should be single nouns with first
+letter uppercase.
+<<eval=FALSE>>=
+data.frame(Name = c("A", "B"),
+           Age = c(20, 30))
+@
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Syntax}
+
+\subsection{Assignment}
+
+Use \rcode{<-}, not \rcode{=}, for assignment.
+
+<<eval=FALSE>>=
+x <- 5
+@
+
+
+\subsection{Spacing}
+
+Place spaces around all binary operators (\rcode{+}, \rcode{-},
+\rcode{<-}, etc.). Do not place a space before a comma, but always
+place one after a comma.
+
+<<eval=FALSE>>=
+average <- mean(feet / 12 + inches, na.rm = T)
+@
+
+Place a space before and after parentheses, except in a function call.
+
+<<eval=FALSE>>=
+if ( condition ) { }
+plot(x, y)
+@
+
+Do not place spaces around code in  square brackets. (Except if
+there's a trailing comma: always place a space after a comma, just
+like in ordinary English.)
+
+<<eval=FALSE>>=
+iris[1, ]
+iris[1, drop = TRUE]
+iris[, 1]
+iris[, ]
+@
+
+
+\subsection{Curly Braces}
+
+Curly braces indicate logical togetherness of the statements within
+the curly braces; this is often called a block.
+
+An opening curly brace should never go on its own line and should
+always be followed by a new line; a closing curly brace should always
+go on its own line, unless followed by \rcode{else} or closing
+parentheses \rcode{)}.
+
+Always indent the code inside the curly braces.
+
+<<eval=FALSE>>=
+if ( y == 0 ) {
+  log(x)
+} else {
+  y * x
+}
+
+aq <- within(airquality, {
+  lOzone <- log(Ozone)
+  Month <- factor(month.abb[Month])
+  cTemp <- round((Temp - 32) * 5/9, 1)
+  rm(Day, Temp)
+})
+@
+
+
+\subsection{Indention}
+
+Indent blocks using two spaces. Never use tabs or mix tabs and spaces.
+
+<<eval=FALSE>>=
+for ( i in 1:10 ) {
+  a <- a + 1
+}
+@
+
+Use more than two spaces if it improves readability; e.g., the
+alignment based on equals signs or function arguments.
+
+<<eval=FALSE>>=
+list(
+  elem1 = "test",
+      y = a * e / d ^ f)
+
+data.frame(Name = c("A", "B"),
+           Age = c(20, 30))
+@
+
+
+\subsection{Line Length}
+
+Keep your lines less than 80 characters. This is the amount that will
+fit comfortably on a printed page at a reasonable size. If you find
+you are running out of room, this is probably an indication that you
+should encapsulate some of the work in a separate function.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Documentation}
+
+Comment your code; explain the why, not the what.
+
+If you want to break up your files into logical parts use three
+hashes, a part title, and then as many hashes as needed to fill the
+line up to 70 characters.
+
+<<eval=FALSE>>=
+### Part title: ######################################################
+@
+
+Use \rcode{\#\#\#}, \rcode{\#\#}, and \rcode{\#} and follow the the
+ESS \citep{ESS} indentation style: Comments beginning with
+\rcode{\#\#\#} are aligned to the beginning of the line. Comments
+beginning with \rcode{\#\#} are aligned to the current level of
+indentation for the block containing the comment. Finally, comments
+beginning with \rcode{\#} are aligned just after the expression.
+
+
+\subsection{Packages}
+
+Use \rcode{roxygen2} for function, methods, etc. documentation.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Principles}
+
+\subsection{Verbose Return Values}
+
+\begin{itemize}
+  \item Follow the \rcode{summary()} concept!
+
+  \item Functions/Methods should not just return plain objects but
+    objects with enough meta-information to be understandable (set
+    names, dimnames, etc.).
+
+  \item Divide functions into "model" and "view"; like it is often
+    done for the summary of an object: \rcode{summary.obj()} and
+    \rcode{print.summary.obj}. This simplifies different views, like
+    textual output or visualization.
+
+  \item In consequence, this means functions like \rcode{print()},
+    \rcode{plot()}, and \rcode{show()} should not make include
+    computations.
+\end{itemize}
+
+
+\subsection{Plot, just Plot!}
+
+\begin{itemize}
+  \item Output functions like plot should just plot.
+
+  \item Provide functions which arrange the data in the way you need
+    them to do plotting plot and call this functions within the plot
+    method (e.g., specialized \rcode{melt()} functions).
+
+  \item Nothing special should be computed in a plot method.
+
+  \item \rcode{plot} is a generic plot function; this means that you
+    should implement the concrete graphic type (e.g., scatter plot,
+    bar plot, etc.) for your object. And \rcode{plot.class()} calls
+    the---in your opinion---best visualization for the object.
+\end{itemize}
+
+
+\subsection{Analysis oriented}
+
+\begin{itemize}
+  \item It is nice that you can define classes, objects, nested lists,
+    etc. However, at the end of the day you have to do statistics and
+    therefore the data structure of choice should be
+    \rcode{data.frame}s.
+
+  \item Try to represent the information in \rcode{data.frame}s; if
+    you implement complex objects or nested lists, provide
+    \rcode{as.data.frame()} functions. You will need them by your self
+    when you start to analyze your objects.
+
+  \item Note that often a wide representation is more readable for the
+    user, but a long representation is more manageable (in my sense of
+    view). Provide \rcode{reshape()} (or \rcode{melt()},
+    \rcode{cast()}, etc.) functions.
+\end{itemize}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bibliographystyle{plainnat}
+\bibliography{references}
+
