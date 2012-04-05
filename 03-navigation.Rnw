@@ -270,7 +270,7 @@ methods; and see \rcode{?print} and \rcode{?print.default} for
 possible additional adjustments for printing objects.
 
 Note that most \rcode{summary()} methods use this possibility in a
-very elegant way. Look, for example, at the \rcode{summray.lm()} and
+very elegant way. Look, for example, at the \rcode{summary.lm()} and
 the \rcode{print.summary.lm()} methods.
 
 
