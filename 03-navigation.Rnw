@@ -14,7 +14,8 @@ detach("package:stats4")
 \progrchapternumber{2}
 \progrchapter{Navigate through R}
 \progrchapterabstract{%
-First steps in finding, reading, understanding, etc. R objects.
+First steps in finding, reading, understanding, etc. R objects and
+evaluation.
 }
 
 
@@ -309,10 +310,81 @@ Use \rcode{getMethod()} to see the source of the methods; the first
 argument is the method name, the second argument the signature, i.e.,
 the classes of the relevent arguments.
 
-<<>>=
+<<eval=FALSE>>=
 getMethod("coef", "mle")
 @
 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Function Browsing}
+
+To understand a function it is ofen useful to execute its expressions
+interactively. The \rcode{debug()} function arranges that we can
+execute a function step-by-step and investigate the created objects.
+
+For example, we want to investigate (i.e., \textbf{debug}) the
+function \rcode{jitter()} which adds noise to numbers.
+
+<<>>=
+debug(jitter)
+@
+
+Whenever now the function is called, its execution is interrupted, a
+browser is opened and one can enter commands or R expressions,
+followed by a newline. The commands are
+\begin{description}
+  \item[n] (or just an empty line, by default). Advance to the next
+    step.
+  \item[c] continue to the end of the current context: e.g. to the end
+    of the loop if within a loop or to the end of the function.
+  \item[cont] synonym for c.
+  \item[where] print a stack trace of all active function calls.
+  \item[Q] exit the browser and the current evaluation and return to
+    the top-level prompt.
+\end{description}
+
+In order to \textbf{undebug} the \rcode{jitter()} function, execute:
+<<>>=
+undebug(jitter)
+@
+
+This also works for S3 methods (\rcode{debug("function.class")}) but
+not for S4 methods (see \rcode{?trace} and the chapter about
+debugging).
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Browsing after an Error}
+
+Often we only want want to specify a debugging action when an error
+(or warning) occurs. The action is specified by the value of the
+global \rcode{error} option:
+<<>>=
+options(error = recover)
+@
+Whenever an error occurs, the execution is interrupted, the list of
+current calls is printed, and the user can select one of them. The
+standard R browser is then invoked from the corresponding environment;
+and one can enter commands or R expressions (see above).
+
+For example,
+<<eval=FALSE>>=
+jitter(letters[1:3])
+@
+throws an error because only numerical values are allowed; the browser
+is invoked and one can investigate the environment of the function.
+
+In order to disable debugging in the case of an error, set the global
+\rcode{error} option to \rcode{NULL}.
+<<>>=
+options(error = NULL)
+@
+
+Another important function is \rcode{traceback()}. If an error occured
+with an unidentifiable error message, this functions shows the
+sequence of calls that lead to the error.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
