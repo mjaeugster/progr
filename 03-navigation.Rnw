@@ -319,7 +319,7 @@ getMethod("coef", "mle")
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Function Browsing}
 
-To understand a function it is ofen useful to execute its expressions
+To understand a function it is often useful to execute its expressions
 interactively. The \rcode{debug()} function arranges that we can
 execute a function step-by-step and investigate the created objects.
 
@@ -382,9 +382,10 @@ In order to disable debugging in the case of an error, set the global
 options(error = NULL)
 @
 
-Another important function is \rcode{traceback()}. If an error occured
-with an unidentifiable error message, this functions shows the
-sequence of calls that lead to the error.
+Another important function is \rcode{traceback()}. If an error
+occurred with an unidentifiable error message, this functions shows
+the sequence of calls that lead to the error.
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
