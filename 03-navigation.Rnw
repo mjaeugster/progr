@@ -13,7 +13,7 @@ rm(list = ls())
 \progrchapternumber{2}
 \progrchapter{Navigate through R}
 \progrchapterabstract{%
-  First steps in finding, reading, debugging, etc. R objects.
+  First steps in finding, reading, understanding, etc. R objects.
 }
 
 
@@ -72,17 +72,7 @@ The global environment object is accessible via the
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Packages}
-
-Similarly to the collection of the user-defined objects in the global
-environment, the objects defined by a package are collected in an
-environment as well. This becomes visible when printing the source
-code of a function:
-<<>>=
-identity
-@
-In the last line of the output, the environment in which the function
-is defined is listed.
+\section{Search Path}
 
 Be it that one has defined an object \rcode{identity} at the global
 environment:
@@ -105,6 +95,29 @@ In order to use the function in the \rcode{base} package, the
 base::identity(10)
 @
 
+In consequence, removing the \rcode{identity} object, removes the
+object in the global environment:
+<<>>=
+rm(identity)
+ls()
+@
+Note that removing an object within a package (e.g.,
+\rcode{rm(base::identity)}) is not allowed.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Packages}
+
+Similarly to the collection of the user-defined objects in the global
+environment, the objects defined by a package are collected in an
+environment as well. This becomes visible when printing the source
+code of a function:
+<<>>=
+identity
+@
+The last line prints the environment in which the function is defined.
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -116,7 +129,7 @@ have to be visible to the user. The \textbf{namespace management
 other things, which objects in the package should be \textbf{exported}
 to make them available to package users.
 
-<<>>=
+<<results='hide'>>=
 library("HSAUR2")
 @
 
@@ -156,15 +169,16 @@ HSAUR2:::exename
 
 However, notice that there is a reason why objects are not
 exported. One can not be sure that the object behaves equally in the
-next version of the object. Furthermore, documentation is only
-required for exported objects.
+next version of the package (or even exists anymore). Furthermore,
+documentation is only required for exported objects.
 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Generic functions (S3)}
 
-Given are two vectors, one numeric and one factor:
+Given are two vectors, one of storage type \rcode{numeric} and one of
+storage type \rcode{factor}:
 <<>>=
 a <- runif(10)
 b <- gl(5, 2)
@@ -176,6 +190,8 @@ par(mfrow = c(1, 2), mar = c(4, 4, 1, 0))
 plot(a)
 plot(b)
 @
+Calling the documentation \rcode{?plot} also only gives very general
+information.
 
 The function \rcode{plot()} is, in fact, a \textbf{generic function}
 in the \textbf{S3} object system. This is a very simple mechanism for
@@ -183,30 +199,52 @@ an object-oriented style of programming. The concrete executing
 function---now called a \textbf{method}---is determined by the class
 of the first argument.
 
-Generic functions are identifiable by the code line
-\rcode{UseMethod("name")} in their function body:
-<<>>=
-plot
-@
-
-
-
-
-
-The classes of the two example vectors are:
+Now, the classes of the two exemplar vectors are:
 <<>>=
 class(a)
 class(b)
 @
+Note that in this example the classes are equal to the type of the
+storage mode (\rcode{typeof()}) but this has not to be the case in
+general.
 
+Generic functions are identifiable by the code line
+\rcode{UseMethod("...")} in their function body:
+<<>>=
+plot
+@
+As one can see, no real computation is done in this generic
+function. Here, the \rcode{UseMethod()} function just determines the
+method to be \textbf{dispatched}.
 
-<<eval=FALSE>>=
+All available plotting methods are determined by the function
+\rcode{methods()}:
+<<>>=
 methods("plot")
 @
+The naming scheme of S3 methods is \rcode{function.class}, where
+\rcode{class} is the class of the first argument. There are several
+plotting methods available; e.g., for the classes \rcode{data.frame},
+\rcode{lm}, and also \rcode{factor}. However, there is not method for
+the class \rcode{numeric}. In such a case, the default method
+\rcode{plot.default} is executed.
 
+Knowing this, the appropriate documentation can be opened:
+<<eval=FALSE>>=
+?plot.factor
+?plot.default
+@
+
+To see the source code of the methods, the functions
+\rcode{getS3method()} and \rcode{getAnywhere()} are available:
 <<eval=FALSE>>=
 getS3method("plot", "factor")
 getAnywhere("plot.factor")
+@
+If we know the package, we can also use the double (if the method is
+visible) or the triple (if the function is non-visible) colon
+operators; e.g.:
+<<eval=FALSE>>=
 graphics:::plot.factor
 @
 
