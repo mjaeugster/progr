@@ -6,6 +6,7 @@
 
 <<echo=FALSE>>=
 rm(list = ls())
+detach("package:stats4")
 @
 
 
@@ -266,18 +267,50 @@ print(x)
 @
 Execute \rcode{methods("print")} to see the available printing
 methods; and see \rcode{?print} and \rcode{?print.default} for
-possible additional arguments.
+possible additional adjustments for printing objects.
 
 Note that most \rcode{summary()} methods use this possibility in a
-very elegant way. Look, e.g., at the \rcode{summray.lm()} method.
+very elegant way. Look, for example, at the \rcode{summray.lm()} and
+the \rcode{print.summary.lm()} methods.
 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Generic functions (S4)}
 
+The \rcode{methods} package provides a second object system. It is
+more formal---however, at first we can think of it as an extension of
+the S3 system where more arguments than only the first argument can be
+used for method dispatching.
+
+The \rcode{stats4} package introduces some basic statistical functions
+based on the S4 system.
+
 <<>>=
 library("stats4")
+@
+
+The definition of generic functions in the \rcode{S4} system looks
+slightly different; enter \rcode{coef} or
+<<>>=
+show(coef)
+@
+Here, the indicating line is \rcode{standardGeneric("...")}. As
+denoted in the output, S4 \rcode{coef()} methods are listed using the
+\rcode{showMethods()} function:
+<<>>=
+showMethods("coef")
+@
+Currently, there is a \rcode{coef()} method available for objects of
+the classes \rcode{mle}, \rcode{summary.mle}, and the default
+\rcode{ANY}.
+
+Use \rcode{getMethod()} to see the source of the methods; the first
+argument is the method name, the second argument the signature, i.e.,
+the classes of the relevent arguments.
+
+<<>>=
+getMethod("coef", "mle")
 @
 
 
