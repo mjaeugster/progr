@@ -24,6 +24,7 @@ The main literature for this section is:
   \item \textit{Software for Data Analysis: Programming with R} by
     \citet{Chambers@2008}
   \item \textit{R Language Definition} by \citet{Rlang}
+  \item \textit{R Help Desk: Accessing the Sources} by \citet{Ligges@2006}
 \end{itemize}
 
 
@@ -248,6 +249,36 @@ operators; e.g.:
 graphics:::plot.factor
 @
 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Print Objects (S3)}
+
+This mechanism is also used to show meaningful representations of
+objects. When an object is required
+<<>>=
+x
+@
+implicitly the appropriate \rcode{print()}-method based on the class
+of the object is executed
+<<>>=
+print(x)
+@
+Execute \rcode{methods("print")} to see the available printing
+methods; and see \rcode{?print} and \rcode{?print.default} for
+possible additional arguments.
+
+Note that most \rcode{summary()} methods use this possibility in a
+very elegant way. Look, e.g., at the \rcode{summray.lm()} method.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Generic functions (S4)}
+
+<<>>=
+library("stats4")
+@
 
 
 
