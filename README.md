@@ -16,7 +16,7 @@
 
 
 ## Programming R Without Borders
-   > 98-*.Rnw
+    98-*.Rnw
    - Computing on the Language
      - Formulas
    - Understanding R Internals
@@ -25,6 +25,6 @@
 
 
 ## Appendix
-   > 99-*.Rnw
+    99-*.Rnw
    1. Coding Conventions
 
