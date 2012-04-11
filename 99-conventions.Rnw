@@ -5,11 +5,11 @@
   fig.show='hold', tidy=FALSE, prompt=FALSE, comment=''}
 
 
-\progrtitlepage{0}{Coding Conventions}
-\progrchapternumber{-1}
+\progrtitlepage{99}{Coding Conventions}
+\progrchapternumber{98}
 \progrchapter{Coding Conventions}
 \progrchapterabstract{%
-Guidelines for a programming R.
+Guidelines and principles for programming R.
 }
 
 
@@ -198,6 +198,18 @@ should encapsulate some of the work in a separate function.
 
 
 
+\subsection{Loading}
+
+Always use quotes when loading a package or data set; when loading a
+data set always specify the package.
+
+<<eval=FALSE>>=
+library("archetypes")
+data("toy", package = "archetypes")
+@
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Documentation}
 
@@ -211,17 +223,19 @@ line up to 70 characters.
 ### Part title: ######################################################
 @
 
-Use \rcode{\#\#\#}, \rcode{\#\#}, and \rcode{\#} and follow the the
-ESS \citep{ESS} indentation style: Comments beginning with
-\rcode{\#\#\#} are aligned to the beginning of the line. Comments
-beginning with \rcode{\#\#} are aligned to the current level of
-indentation for the block containing the comment. Finally, comments
-beginning with \rcode{\#} are aligned just after the expression.
+Use \rcode{\#\#\#}, \rcode{\#\#}, and \rcode{\#} like sectioning
+elements; follow the ESS \citep{ESS} indentation style: Comments
+beginning with \rcode{\#\#\#} are aligned to the beginning of the
+line. Comments beginning with \rcode{\#\#} are aligned to the current
+level of indentation for the block containing the comment. Finally,
+comments beginning with \rcode{\#} are aligned just after the
+expression.
 
 
 \subsection{Packages}
 
-Use \rcode{roxygen2} for function, methods, etc. documentation.
+Use \rcode{roxygen2} \citep{roxygen2} for function, methods,
+etc. documentation.
 
 
 

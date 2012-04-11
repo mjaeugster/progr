@@ -4,7 +4,7 @@
 \SweaveOpts{fig.path='figs/navigation-', fig.align='center',
   fig.show='hold', tidy=FALSE, prompt=TRUE, comment=''}
 
-<<echo=FALSE>>=
+<<echo=FALSE,results='hide'>>=
 rm(list = ls())
 detach("package:stats4")
 @
