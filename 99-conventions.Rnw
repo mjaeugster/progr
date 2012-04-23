@@ -57,9 +57,11 @@ meaningful.
   archetypes-robust.R
 \end{ex}
 
-\textbf{Data} files end in \rcode{.RData}.
+\textbf{Data} files end in \rcode{.RData} (via \rcode{save()} or
+\rcode{save.image()}) or \rcode{.rds} (via \rcode{saveRDS()}).
 \begin{ex}%
   muc.RData
+  muc.rds
 \end{ex}
 
 \textbf{Help} files end in \rcode{.Rd}
