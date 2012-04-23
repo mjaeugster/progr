@@ -4,6 +4,9 @@
 \SweaveOpts{fig.path='figs/session-', fig.align='center',
   fig.show='hold', tidy=FALSE, prompt=TRUE, comment=''}
 
+<<echo=FALSE,print=FALSE>>=
+rm(list = ls())
+@
 
 \progrtitlepage{2}{Sample Session}
 \progrchapternumber{1}
@@ -54,7 +57,7 @@ Note that the shortcut \rcode{?} does not work when the package is not
 loaded.
 
 For a first inspection, take a look at the structure of the data set
-(\rcode{str()}).
+using the \rcode{str()} function.
 
 <<>>=
 str(Forbes2000, vec.len = 1)
@@ -63,7 +66,9 @@ str(Forbes2000, vec.len = 1)
 The output of \rcode{str()} shows that \rcode{Forbes2000} is an object
 of the class \rcode{data.frame} with $\Sexpr{nrow(Forbes2000)}$
 observations of $\Sexpr{ncol(Forbes2000)}$ variables. For each
-variable, its class is listed as well as the first few observations.
+variable, its class is listed as well as the first few
+observations. The argument \rcode{vec.len} defines how many ``first
+few'' elements are displayed of each vector.
 
 Use the \rcode{print()} function to see the complete data set, and the
 \rcode{head()} and \rcode{tail()} functions to see the first and last
@@ -73,6 +78,11 @@ implicitly executed when only the name of the data set is entered.
 Basic characteristics of the data set are provided by: \rcode{ncol()}
 for the number of variables; \rcode{nrow()} for the number of
 observations; \rcode{names()} for the variable names.
+
+<<>>=
+c(rows = nrow(Forbes2000), cols = ncol(Forbes2000))
+names(Forbes2000)
+@
 
 
 
@@ -94,8 +104,11 @@ the functions \rcode{mean()}, \rcode{median()}, \rcode{range()},
 available via the \rcode{table()} function, the number of levels via
 \rcode{nlevels} and the different levels via \rcode{levels()}.
 
+In order to access a variable of a \rcode{data.frame} use the
+\rcode{\$} operator.
+
 <<>>=
-median(Forbes2000$profit, na.rm = TRUE)
+median(Forbes2000$sales)
 range(Forbes2000$assets)
 table(Forbes2000$category)
 @
@@ -103,31 +116,169 @@ table(Forbes2000$category)
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Computing with Data}
+\section{Subsets}
 
-The data set is ordered according to the rank of the companies; the
-first three companies are:
+A subset of the elements (rows and columns) of a \rcode{data.frame}
+can be extracted using the \rcode{[} operator. This operator takes two
+index vectors separated by a comma---the first for the observations
+(rows) and the second for the variables (columns). A missing index
+vector means that all available data of this dimension are
+selected.
 
+The first ten observations and all variables:
+<<eval=FALSE>>=
+Forbes2000[1:10, ]
+@
+All observations of the second variable:
+<<eval=FALSE>>=
+Forbes2000[, 2]       # by index
+Forbes2000[, "name"]  # by name
+@
+The first three companies:
 <<>>=
 vars <- c("name", "sales", "profits", "assets")
 Forbes2000[1:3, vars]
 @
 
-Extract the biggest companies with respect to an alternative ordering;
-e.g., the three top selling companies:
+An index vector can also be a logical vector. In this case, the vector
+must be of the same length as the number of rows or columns. Values
+corresponding to \rcode{TRUE} are selected, \rcode{FALSE} are omitted.
 
+All companies with assets greater than 1000:
 <<>>=
-osales <- order(Forbes2000$sales, decreasing = TRUE)
-osales[1:3]
+table(Forbes2000$assets > 1000)
+Forbes2000[Forbes2000$assets > 1000, "name"]
 @
+All companies from Australia and with a rank lower than 100:
 <<>>=
-Forbes2000[osales[1:3], vars]
+Forbes2000[Forbes2000$country == "Australia" &
+           Forbes2000$rank < 100, ]
 @
-
 
 \seealso{
   Use the function \rcode{subset()} to avoid a lot of typing in
   complex subsets.
+}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Missing Values}
+
+The \rcode{data.frame}'s summary shows for the numerical variable
+\rcode{profits} an additional statistics, i.e., \rcode{NA's}.
+
+<<>>=
+summary(Forbes2000$profits)
+@
+
+For some of the companies the measurement of the \rcode{profits}
+variable are missing. In R a value which is \textit{not available} or
+a \textit{missing value} in the statistical sense, is indicated by the
+special value \rcode{NA}.
+
+This affects a lot of summary statistics and statistical methods; e.g.,
+<<>>=
+mean(Forbes2000$profits)
+@
+is \rcode{NA} because of the available missing values. One has to
+explicitly decide to ignore the missing values:
+<<>>=
+mean(Forbes2000$profits, na.rm = TRUE)
+@
+
+Use the \rcode{is.na()} function to find the missing values,
+<<>>=
+which(is.na(Forbes2000$profits))
+@
+and \rcode{complete.cases()} to find all complete cases.
+
+The function \rcode{na.omit()} removes all observations with
+missing values.
+<<>>=
+Forbes2000cc <- na.omit(Forbes2000)
+mean(Forbes2000cc$profits)
+@
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Basic Data Manipulations}
+
+A new variable is added to a \rcode{data.frame} using the \rcode{\$<-}
+operator:
+<<>>=
+Forbes2000cc$costs <- Forbes2000cc$sales - Forbes2000cc$profits
+@
+
+A variable is removed by assigning \rcode{NULL}:
+<<>>=
+Forbes2000cc$category <- NULL
+@
+
+Using the subset operator we can work on a set of variables; e.g.,
+scale all numerical variables:
+<<>>=
+Forbes2000cc[, 4:7] <- scale(Forbes2000cc[, 4:7])
+@
+
+Note that \rcode{scale()} can be applied to a set of variables. Other
+functions can only be applied to vectors, and hence must be applied to
+each column in turn:
+<<>>=
+median(Forbes2000cc[, 4:7])
+@
+<<>>=
+c(median(Forbes2000cc[, 4]),
+  median(Forbes2000cc[, 5]))
+@
+
+\seealso{
+  Use \rcode{sapply()} to apply a function on each individual variable
+  of a data.frame.
+}
+
+Operating on each row is much more tricker. Whereas each column is a
+variable of a single class (numeric, factor, etc.) a row can be rather
+diverse.
+
+<<>>=
+Forbes2000cc[722, ]
+@
+
+Manipulating a cell is done using the \rcode{[<-} operator.
+
+<<>>=
+Forbes2000cc[722, "sales"] <- 0.05
+Forbes2000cc[722, ]
+@
+
+\seealso{
+  \rcode{apply()} which applies a function over margins (i.e., on
+  rows, columns or cells).
+}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Saving data}
+
+Save an R specific external representation of a data set (or object in
+general) to a file in the active working directory:
+<<>>=
+saveRDS(Forbes2000cc, file = "Forbes2000cc.rds")
+rm(Forbes2000cc)
+@
+
+At a later date we can load the data set via:
+<<eval=FALSE>>=
+Forbes2000cc <- readRDS("Forbes2000cc.rds")
+@
+
+\seealso{
+  See \rcode{?write.table} for saving a textual representation of data
+  sets; \rcode{?save} to save more than one object; and
+  \rcode{?save.image} to save the complete workspace.
 }
 
 
@@ -152,6 +303,37 @@ sales (log-scaled):
 par(mar = c(4, 4, 0, 0))
 plot(log(marketvalue) ~ log(sales), data = Forbes2000,
      pch = 16, col = rgb(0, 0, 0, 0.1))
+@
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Simple Linear Regression}
+
+A first analysis of the bivariate relationships between the two
+numerical variables can be done with a simple linear regression.
+
+<<>>=
+m1 <- lm(log(marketvalue) ~ log(sales), data = Forbes2000)
+@
+
+The estimated coefficients are:
+<<>>=
+m1
+@
+
+The summary method of an object of class \rcode{lm} returns details
+about the linear model fit:
+<<>>=
+summary(m1)
+@
+
+Finally, we can visualize the fit within the data:
+<<fig.width=4, fig.height=3.5>>=
+par(mar = c(4, 4, 0, 0))
+plot(log(marketvalue) ~ log(sales), data = Forbes2000,
+     pch = 16, col = rgb(0, 0, 0, 0.1))
+abline(m1, col = "red", lwd = 2)
 @
 
 
