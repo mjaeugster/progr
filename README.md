@@ -3,7 +3,7 @@
 > The R programming book I always wanted to read.
 
 
-## Programming R
+## Programming R I
    1. Basic Vocabulary
    1. Sample Session
    1. Navigate through R
@@ -23,7 +23,7 @@
    - Parallel programming
 
 
-## Programming R Without Borders
+## Programming R II
     98-*.Rnw
    - Computing on the Language
      - Formulas
