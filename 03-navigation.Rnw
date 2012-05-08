@@ -4,7 +4,7 @@
 \SweaveOpts{fig.path='figs/navigation-', fig.align='center',
   fig.show='hold', tidy=FALSE, prompt=TRUE, comment=''}
 
-<<echo=FALSE,results='hide'>>=
+<<echo=FALSE,error=FALSE,results='hide'>>=
 rm(list = ls())
 detach("package:stats4")
 @
@@ -330,7 +330,11 @@ function \rcode{jitter()} which adds noise to numbers.
 debug(jitter)
 @
 
-Whenever now the function is called, its execution is interrupted, a
+Whenever now the function is called,
+<<eval=FALSE>>=
+jitter(1:10)
+@
+its execution is interrupted, a
 browser is opened and one can enter commands or R expressions,
 followed by a newline. The commands are
 \begin{description}
