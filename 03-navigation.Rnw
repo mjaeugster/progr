@@ -27,6 +27,7 @@ The main literature for this section is:
     \citet{Chambers@2008}
   \item \textit{R Language Definition} by \citet{Rlang}
   \item \textit{R Help Desk: Accessing the Sources} by \citet{Ligges@2006}
+  \item \textit{How R Searches and Finds Stuff} by \citet{Gupta@2012}
 \end{itemize}
 
 
