@@ -1,0 +1,252 @@
+
+\Sexpr{set_parent('master.tex')}
+
+\SweaveOpts{fig.path='figs/navigation-', fig.align='center',
+  fig.show='hold', tidy=FALSE, prompt=TRUE, comment=''}
+
+
+\progrtitlepage{4}{Writing your own functions}
+\progrchapternumber{3}
+\progrchapter{Writing your own functions}
+\progrchapterabstract{%
+Extend R with own ideas.
+}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The main literature for this section is:
+\begin{itemize}
+  \item \textit{Software for Data Analysis: Programming with R} by
+    \citet{Chambers@2008}
+  \item \textit{An Introduciton to R} by \citet{Rintro}
+  \item \textit{R Language Definition} by \citet{Rlang}
+\end{itemize}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Function definition}
+
+Functions are the workhorses of R. A function is a group of statements
+(i.e. a grouped expression) that takes some input, does some computations and
+returns a result.
+
+A function is defined by an assignment of the form
+<<eval=FALSE>>=
+name <- function(arg_1, arg_2, ...) {
+  statements
+}
+@
+\rcode{arg\_1}, \rcode{arg\_2}, \rcode{...} are called the
+formal arguments. They are usually used in the statements to compute
+the return value (the last statement of the function).
+
+A call to the function then usually takes the form:
+<<eval=FALSE>>=
+name(expr_1, expr_2)
+@
+
+Functions split your source code into smaller, more manageable,
+parts. The advantages of this include
+\citep[cf.][]{Wikipedia-Function}:
+\begin{itemize}
+  \item decomposition of a complex programming task into simpler steps;
+  \item reducing the duplication of code within a program;
+  \item enabling the reuse of code across multiple programs;
+  \item improves debubbing and testing;
+\end{itemize}
+
+A simple example is a function which finds the most deviant
+observation of a given input vector:
+
+<<>>=
+which_maxdev <- function(x) {
+  mdn <- median(x)
+  devs <- abs(x - mdn)
+  which.max(devs)
+}
+@
+
+The function has the name \rcode{which\_maxdev}, takes the input
+vector \rcode{x} and returns the index of the element with the most
+deviation within \rcode{x}. Note that the statement in the last line
+is the return value of the function (one can also use the
+\rcode{return()} for returning a value not at the end of a function).
+
+The function is called as follows:
+
+<<>>=
+data("Forbes2000", package = "HSAUR2")
+
+which_maxdev(Forbes2000$sales)
+which_maxdev(Forbes2000$marketvalue)
+@
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{The \rcode{...} argument}
+
+Computing the index of the element with the most deviation for the
+\rcode{profits} variable of the \rcode{Forbes2000} \rcode{data.frame}
+results in
+<<>>=
+which_maxdev(Forbes2000$profits)
+@
+
+This is the case because \rcode{Forbes2000\$profits} contains
+\rcode{NA} values and therefor the median of the vector is \rcode{NA}
+as well (debug the function to investigate this problem). Now, the
+\rcode{median()} functions has an argument \rcode{na.rm}
+<<>>=
+args(median)
+@
+to indicte whether \rcode{NA} values should be stripped and the median
+of the remaining elements should be computed.
+
+We can easily extend our function \rcode{which\_maxdev()} with the
+same functionality by introducing the \rcode{...} argument:
+<<>>=
+which_maxdev <- function(x, ...) {
+  mdn <- median(x, ...)
+  devs <- abs(x - mdn)
+  which.max(devs)
+}
+@
+Arguments which are not listed in the function definition of
+\rcode{which\_maxdev} are now collected and passed on to the
+underlying function \rcode{median()}. We can now call the function
+which the additional \rcode{na.rm} argument:
+<<>>=
+which_maxdev(Forbes2000$profits, na.rm = TRUE)
+@
+
+The dot-dot-dot argument is used by many graphic functions to pass on
+graphical parameters to \rcode{par()} to control the graphical
+output. Take, for example, a look at the code of \rcode{plot.default}.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Named arguments and defaults}
+
+If we want to make the removing of the \rcode{NA} values the default
+behavior, we have to define an argument \rcode{na.rm} with the default
+value \rcode{TRUE} and pass on this argument to the \rcode{median()}
+function.
+
+<<>>=
+which_maxdev <- function(x, na.rm = TRUE) {
+  mdn <- median(x, na.rm = na.rm)
+  devs <- abs(x - mdn)
+  which.max(devs)
+}
+@
+
+The computation now works for \rcode{Forbes2000\$profits} without any
+further argument specification:
+
+<<>>=
+which_maxdev(Forbes2000$profits)
+@
+
+Note that if arguments to called functions are given in the
+\rcode{name = object} form, they may be given in any order. The
+\rcode{which\_maxdev()} function may be invoked in several ways, for
+example
+<<results='hide'>>=
+which_maxdev(Forbes2000$sales)
+which_maxdev(x = Forbes2000$sales, na.rm = FALSE)
+which_maxdev(na.rm = FALSE, x = Forbes2000$sales)
+which_maxdev(na.rm = FALSE, Forbes2000$sales)
+@
+are all equivalent.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Argument matching}
+
+The first thing that occurs in a function evaluation is the matching
+of formal to the actual or supplied arguments. This is done by a
+three-pass process:
+\begin{description}
+  \item [Exact matching on tags.] For each named supplied argument the
+    list of formal arguments is searched for an item whose name
+    matches exactly. It is an error to have the same formal argument
+    match several actuals or vice versa.
+
+<<results='hide'>>=
+which_maxdev(Forbes2000$sales, na.rm = FALSE)
+@
+
+  \item [Partial matching on tags.] Each remaining named supplied
+    argument is compared to the remaining formal arguments using
+    partial matching. If the name of the supplied argument matches
+    exactly with the first part of a formal argument then the two
+    arguments are considered to be matched. It is an error to have
+    multiple partial matches.
+
+<<results='hide'>>=
+which_maxdev(Forbes2000$sales, n = FALSE)
+@
+
+  \item [Positional matching.] Any unmatched formal arguments are
+    bound to unnamed supplied arguments, in order. If there is a
+    \rcode{...} argument, it will take up the remaining arguments,
+    tagged or not.
+
+<<results='hide'>>=
+which_maxdev(n = FALSE, Forbes2000$sales)
+@
+\end{description}
+
+If any arguments remain unmatched an error is declared.
+<<>>=
+which_maxdev(Forbes2000$sales, foo = 1)
+@
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Argument checking}
+
+<<>>=
+which_maxdev(Forbes2000$name)
+which_maxdev(as.matrix(Forbes2000[, c("sales", "marketvalue")]))
+which_maxdev(Forbes2000$sales, na.rm = "yes")
+@
+
+<<>>=
+which_maxdev <- function(x, na.rm = TRUE) {
+  stopifnot(is.numeric(x) & is.vector(x))
+  stopifnot(is.logical(na.rm))
+
+  mdn <- median(x, na.rm = na.rm)
+  devs <- abs(x - mdn)
+  which.max(devs)
+}
+@
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Function scope}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bibliographystyle{plainnat}
+\bibliography{references}
