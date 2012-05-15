@@ -5,6 +5,11 @@
   fig.show='hold', tidy=FALSE, prompt=TRUE, comment=''}
 
 
+<<echo=FALSE,error=FALSE,results='hide'>>=
+rm(list = ls())
+@
+
+
 \progrtitlepage{4}{Writing your own functions}
 \progrchapternumber{3}
 \progrchapter{Writing your own functions}
@@ -29,8 +34,8 @@ The main literature for this section is:
 \section{Function definition}
 
 Functions are the workhorses of R. A function is a group of statements
-(i.e. a grouped expression) that takes some input, does some computations and
-returns a result.
+(i.e. a grouped expression) that takes some input, does some
+computations and returns a result.
 
 A function is defined by an assignment of the form
 <<eval=FALSE>>=
@@ -39,10 +44,11 @@ name <- function(arg_1, arg_2, ...) {
 }
 @
 \rcode{arg\_1}, \rcode{arg\_2}, \rcode{...} are called the
-formal arguments. They are usually used in the statements to compute
-the return value (the last statement of the function).
+\textbf{formal arguments}. They are usually used in the statements,
+i.e., the function \textbf{body}, to compute the \textbf{return value}
+(the result of last statement).
 
-A call to the function then usually takes the form:
+A call to the function then takes the form:
 <<eval=FALSE>>=
 name(expr_1, expr_2)
 @
@@ -212,11 +218,26 @@ which_maxdev(Forbes2000$sales, foo = 1)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Argument checking}
 
+As programmers of a function we have to ensure that the function does
+what it aims to do. This also means that we have to catch wrong input
+arguments and provide a meaningful error message.
+
+The function \rcode{which\_maxdev()} for example does not work
+correctly for the following inputs:
 <<>>=
 which_maxdev(Forbes2000$name)
 which_maxdev(as.matrix(Forbes2000[, c("sales", "marketvalue")]))
 which_maxdev(Forbes2000$sales, na.rm = "yes")
 @
+
+Test can be incorporated most easily if they are \textbf{assertion
+  tests}; that is, expressions that are asserted to evaluate to the
+logical value \rcode{TRUE}. R provides the function
+\rcode{stopifnot()} to run assertion test.
+
+We extend the function \rcode{which\_maxdev()} to catch wrong input
+arguments; i.e., \rcode{x} has to be a numeric vector, and
+\rcode{na.rm} has to be a logical value:
 
 <<>>=
 which_maxdev <- function(x, na.rm = TRUE) {
@@ -229,21 +250,90 @@ which_maxdev <- function(x, na.rm = TRUE) {
 }
 @
 
+The computation of the observation with the maximum deviation of a
+matrix now raises an error:
+<<>>=
+which_maxdev(as.matrix(Forbes2000[, c("sales", "marketvalue")]))
+@
+
+Note: Use \rcode{apply()} to properly compute this function for a
+matrix or data.frame:
+<<>>=
+apply(as.matrix(Forbes2000[, c("sales", "marketvalue")]), 2,
+      which_maxdev)
+@
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Return value}
+
+The return value of a function can be any R object.
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Function scope}
 
+Scope or the scoping rules are simply the set of rules used by the
+evaluator to find a value for a symbol.
 
+The symbols which occur in the body of a function can be divided into
+three classes:
+\begin{description}
+  \item [Formal parameters] of a function are those occurring in the
+    argument list of the function. Their values are determined by the
+    process of binding the actual function arguments to the formal
+    parameters.
 
+  \item [Local variables:] are those whose values are determined by
+    the evaluation of expressions in the body of the functions. Local
+    variables must first be defined, this is typically done by having
+    them on the left-hand side of an assignment.
 
+  \item [Free variables:] are those which are not formal parameters or
+    local variables. Their value is determined by searching in the
+    environment of the function, then its enclosure and so on until
+    the global environment is reached. This is called \textbf{lexical
+      scope}.
+\end{description}
+Formal parameters and local variables are called \textbf{bound
+  variables}---they are bound to the environment of the function and
+do not exist outside of it. Free variables are called \textbf{unbound
+  variables}---R has to search for their value in the enclosing
+environments.
 
+Consider the following function definition:
+<<>>=
+f <- function(x) {
+  y <- 2 * x
+  cat("x =", x, "\n")
+  cat("y =", y, "\n")
+  cat("z =", z, "\n")
+}
+@
+In this function, \rcode{x} is a formal parameter, \rcode{y} is a
+local variable and \rcode{z} is a free variable.
 
+Executing \rcode{f()} throws an error, because the free variable
+\rcode{z} is not defined in any enclosing environment of the function:
+<<>>=
+f(2)
+@
+If we now define an object \rcode{z} in the global environment
+<<>>=
+z <- 42
+@
+R finds this \rcode{z} because of the lexical scoping rule and the
+function is executed without an error:
+<<>>=
+f(2)
+@
 
-
-
-
-
+Note that using free variables in a function is very error-prone and
+should not be used without a very (very!) good reason. Generally all
+variables needed within a function should be passed via the formal
+arguments.
 
 
 
