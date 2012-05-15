@@ -24,7 +24,7 @@ The main literature for this section is:
 \begin{itemize}
   \item \textit{Software for Data Analysis: Programming with R} by
     \citet{Chambers@2008}
-  \item \textit{An Introduciton to R} by \citet{Rintro}
+  \item \textit{An Introduction to R} by \citet{Rintro}
   \item \textit{R Language Definition} by \citet{Rlang}
 \end{itemize}
 
@@ -60,7 +60,7 @@ parts. The advantages of this include
   \item decomposition of a complex programming task into simpler steps;
   \item reducing the duplication of code within a program;
   \item enabling the reuse of code across multiple programs;
-  \item improves debubbing and testing;
+  \item improves debugging and testing;
 \end{itemize}
 
 A simple example is a function which finds the most deviant
@@ -108,7 +108,7 @@ as well (debug the function to investigate this problem). Now, the
 <<>>=
 args(median)
 @
-to indicte whether \rcode{NA} values should be stripped and the median
+to indicate whether \rcode{NA} values should be stripped and the median
 of the remaining elements should be computed.
 
 We can easily extend our function \rcode{which\_maxdev()} with the
