@@ -268,7 +268,17 @@ apply(as.matrix(Forbes2000[, c("sales", "marketvalue")]), 2,
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Return value}
 
-The return value of a function can be any R object.
+The return value of a function can be any R object. Per definition the
+return value of a function is the value of the last expression of the
+function. In case of the \rcode{which\_maxdev()} function its return
+value is the value of the \rcode{which.max()} function. Complex return
+values can be created by using (nested) lists.
+
+One can use \rcode{return()} to explicitly indicate the return value;
+this is useful to exit a function ``at any time'', e.g., within a
+\rcode{if} statement. Note that \rcode{invisible()} allows function
+return values which can be assigned, but which do not print when they
+are not assigned.
 
 
 
