@@ -44,7 +44,7 @@ The main control flow statements are
     some condition is met;
   \item [Functions:] execute a set of distant statements, after which
     the flow of control usually returns;
-  \item [Return:] stop the program, preventing any further execution;
+  \item [Ending:] stop the program, preventing any further execution;
   \item [Exceptions:] handle the occurrence of exceptions;
 \end{description}
 
@@ -204,15 +204,54 @@ The escape key \rcode{ESC} interupts the execution in such a case.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Return}
+\section{Ending}
 
+The \textbf{return} statement exits from the current function, and
+control flow returns to where the function was evaluated. Its formal
+syntax is
+<<eval=FALSE>>=
+return(value)
+@
+where \rcode{value} is the the R object which is returned to the
+caller (either an other function or the user).
 
+This now allows us to capture an ``unfavorable'' input, namley
+<<eval=FALSE>>=
+radder(Inf)
+@
+which leads to an infinite loop.
+<<>>=
+radder <- function(x) {
+  if ( x == Inf ) {
+    return(c(x = x, i = Inf, y = Inf))
+  }
 
+  y <- 0
+  i <- 0
+  while ( y <= x ) {
+    y <- y + sample(100, 1)
+    i <- i + 1
+  }
+  c(x = x, i = i, y = y)
+}
+
+radder(Inf)
+@
+
+Note that \rcode{stopifnot()} and \rcode{stop()} also stop the
+evaluation of the current function and exit it with an error message.
 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Exceptions}
+
+Exceptions are anomalous or exceptional situations requiring special
+processing during computation (e.g., an error occurs in a called
+function). The process of responding to such exceptions is called
+\textbf{exception handling}.
+
+
 
 
 
