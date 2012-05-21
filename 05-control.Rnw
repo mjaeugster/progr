@@ -1,0 +1,221 @@
+
+\Sexpr{set_parent('master.tex')}
+
+\SweaveOpts{fig.path='figs/control-', fig.align='center',
+  fig.show='hold', tidy=FALSE, prompt=TRUE, comment=''}
+
+
+<<echo=FALSE,error=FALSE,results='hide'>>=
+rm(list = ls())
+@
+
+
+\progrtitlepage{5}{Control structures}
+\progrchapternumber{4}
+\progrchapter{Control structures}
+\progrchapterabstract{%
+Control the flow.
+}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The main literature for this section is:
+\begin{itemize}
+  \item \textit{An Introduction to R} by \citet{Rintro}
+  \item \textit{R Language Definition} by \citet{Rlang}
+\end{itemize}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Control flow}
+
+R provides basic control-flow constructs; they allow to define the
+order in which the individual statements of a script or function are
+evaluated.
+
+The main control flow statements are
+\citep[cf.][]{Wikipedia-ControlFlow}:
+\begin{description}
+  \item [Choices:] execute a set of statements only if some condition
+    is met;
+  \item [Loops:] execute a set of statements zero or more times, until
+    some condition is met;
+  \item [Functions:] execute a set of distant statements, after which
+    the flow of control usually returns;
+  \item [Return:] stop the program, preventing any further execution;
+  \item [Exceptions:] handle the occurrence of exceptions;
+\end{description}
+
+See Chapter~4 for a detailed introduction into functions.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Choices}
+
+The \textbf{if-else} statement conditionally evaluates two
+statements. The formal syntax is
+<<eval=FALSE>>=
+if ( condition ) {
+  statement1
+} else {
+  statement2
+}
+@
+
+First, \rcode{condition} is evaluated. If it is \rcode{TRUE} then
+\rcode{statement1} is evaluted; if it is \rcode{FALSE} then \rcode
+{statement2} is evaluated.
+
+A simple example is the sign function which returns $-1$ if the number
+$x$ is smaller than $0$ and $+1$ if the number $x$ is greater than
+zero:
+<<>>=
+sign <- function(x) {
+  if ( x > 0 ) {  # condition1
+    y <- +1       # statement1
+  } else {        # !condition1
+    y <- -1       # statement2
+  }
+  y
+}
+
+c(sign(-10), sign(pi), sign(10))
+@
+
+The function, however, is not correctly defined for $x = 0$:
+<<>>=
+sign(0)
+@
+
+According to the mathematical definition of the sign function the
+return value should be $0$. In order to achieve this, we need nested
+if/else statements:
+<<>>=
+sign <- function(x) {
+  if ( x > 0 ) {         # condition1
+    y <- +1              # statement1
+  } else if ( x < 0 ) {  # condition2
+    y <- -1              # statement2
+  } else {               # !(condition1 | condition2)
+    y <- 0               # statement3
+  }
+  y
+}
+
+c(sign(-10), sign(0), sign(10))
+@
+
+Note that if the conditions in if-else statements are vectors, only
+the first element is used; therefore vectorized computation is not
+possible with our implementation of the sign function:
+<<>>=
+sign(c(-1.2, exp(1), 13.873))
+
+@
+See \rcode{ifelse()} for a vectorized conditional
+statement.
+
+Note that in some cases the function \rcode{switch()} allows to write
+nested if-else statements more elegantly (multiway branches).
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Loops}
+
+A loop is a sequence of statements which is specified once but which
+may be carried out several times in succession. R has three statements
+that provide explicit looping (see \rcode{?Control}); here we discuss
+the \textbf{for} and \textbf{while} loops.
+
+The most common one (in my feeling) is the count- and
+collection-controlled \textbf{for} loop; its formal syntax is
+<<eval=FALSE>>=
+for ( var in seq ) {
+  statement1
+}
+@
+where \rcode{var} is the loop variable, \rcode{seq} is a vector
+expression (often a sequence like \rcode{1:20}) and \rcode{statement1}
+is evaluated as often as there are elements in \rcode{seq}.
+
+A simple example is a function which sums the elements of a vector:
+<<>>=
+adder <- function(x) {
+  y <- 0
+  for ( e in x ) {  # var in seq
+    y <- y + e      # statement1
+  }
+  y
+}
+
+adder(1:10)
+@
+The loop body is executed for each element of $x$; in the first
+iteration \rcode{e} is \rcode{x[1]}, in the second iteration \rcode{e}
+is \rcode{x[2]}, and so on.
+
+\bigskip
+
+In case of the for loop, the number of interations is defined (i.e.,
+the number of elements in \rcode{seq}). This is not always true,
+sometimes we want to iterate until a specific condition is
+true---the condition-controlled \textbf{while} (and \textbf{repeat})
+loop allow this. Its formal syntax is
+<<eval=FALSE>>=
+while ( condition ) {
+  statement1
+}
+@
+While \rcode{condition} is \rcode{TRUE}, \rcode{statement1} is
+executed.
+
+A simple example is a function which adds up random numbers between
+$1$ and $100$ until the sum is greater than a number $x$:
+<<>>=
+radder <- function(x) {
+  y <- 0
+  i <- 0
+  while ( y <= x ) {         # condition
+    y <- y + sample(100, 1)  # state...
+    i <- i + 1               #      ...ment1
+  }
+  c(x = x, i = i, y = y)
+}
+
+set.seed(1234)
+radder(20)
+radder(831)
+@
+
+Beware of creating infinite loops, i.e., loops where \rcode{condition}
+is always \rcode{TRUE}; e.g.,
+<<eval=FALSE>>=
+x <- 1
+while ( x > 0 ) {
+  x <- x + 1
+}
+@
+The escape key \rcode{ESC} interupts the execution in such a case.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Return}
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Exceptions}
+
+
+
+
+\bibliographystyle{plainnat}
+\bibliography{references}
