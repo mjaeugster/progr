@@ -66,7 +66,7 @@ if ( condition ) {
 @
 
 First, \rcode{condition} is evaluated. If it is \rcode{TRUE} then
-\rcode{statement1} is evaluted; if it is \rcode{FALSE} then \rcode
+\rcode{statement1} is evaluated; if it is \rcode{FALSE} then \rcode
 {statement2} is evaluated.
 
 A simple example is the sign function which returns $-1$ if the number
@@ -160,7 +160,7 @@ is \rcode{x[2]}, and so on.
 
 \bigskip
 
-In case of the for loop, the number of interations is defined (i.e.,
+In case of the for loop, the number of iterations is defined (i.e.,
 the number of elements in \rcode{seq}). This is not always true,
 sometimes we want to iterate until a specific condition is
 true---the condition-controlled \textbf{while} (and \textbf{repeat})
@@ -215,7 +215,7 @@ return(value)
 where \rcode{value} is the the R object which is returned to the
 caller (either an other function or the user).
 
-This now allows us to capture an ``unfavorable'' input, namley
+This now allows us to capture an ``unfavorable'' input, namely
 <<eval=FALSE>>=
 radder(Inf)
 @
@@ -251,9 +251,59 @@ processing during computation (e.g., an error occurs in a called
 function). The process of responding to such exceptions is called
 \textbf{exception handling}.
 
+R provides \rcode{tryCatch()} for handling conditions. Its formal
+syntax is
+<<>>=
+tryCatch(expr, ...)
+@
+where \rcode{expr} is evaluated and might fail. The programmer then
+has the change to define handlers for the possible problems.
 
+For an example let us implement a function which draws $n$ random
+numbers between $-0.5$ and $1$, draws an error if the sum of these
+numbers is smaller than $0$, and otherwise returns the sum.
 
+<<>>=
+f <- function(n) {
+  x <- runif(n, min = -0.5, max = 1)
+  if ( sum(x) < 0 ) {
+    stop("Sorry, sum(x) < 0")
+  }
+  sum(x)
+}
 
+set.seed(1234)
+f(10)
+f(10)
+@
+
+Now, we use this function in another function which implements a
+simulation with $m$ replications. However, we do not want that the
+function stops when \rcode{f} throws an error---we just want to ignore
+the error and continue with the remaining iterations.
+
+<<>>=
+g <- function(n, m) {
+  y <- numeric(length = m)
+
+  for ( i in seq(length = m) ) {
+    y[i] <- tryCatch(f(n),
+                     error = function(e) {
+                       warning("Error in f(); using NA instead.")
+                       NA_real_
+                     })
+  }
+  y
+}
+
+set.seed(1222)
+g(10, 10)
+g(10, 10)
+@
+
+This is especially useful in longer simulations with a huge number of
+iterations, where the error is catched (and saved) but the execution
+is continued.
 
 
 \bibliographystyle{plainnat}
