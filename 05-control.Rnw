@@ -253,7 +253,7 @@ function). The process of responding to such exceptions is called
 
 R provides \rcode{tryCatch()} for handling conditions. Its formal
 syntax is
-<<>>=
+<<eval=FALSE>>=
 tryCatch(expr, ...)
 @
 where \rcode{expr} is evaluated and might fail. The programmer then
@@ -272,7 +272,7 @@ f <- function(n) {
   sum(x)
 }
 
-set.seed(1234)
+set.seed(11)
 f(10)
 f(10)
 @
