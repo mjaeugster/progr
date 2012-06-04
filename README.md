@@ -15,7 +15,7 @@ Software](http://www.lrz.de/~agleisch/teaching/progstat12/).
    1. [Navigate through R](https://github.com/downloads/mjaeugster/progr/03-navigation.pdf)
    1. [Writing your own functions](https://github.com/downloads/mjaeugster/progr/04-functions.pdf)
    1. [Control structures](https://github.com/downloads/mjaeugster/progr/05-control.pdf)
-   1. [Vectorizing computations]
+   1. [Vectorizing computations](https://github.com/downloads/mjaeugster/progr/06-apply.pdf)
 
 
 ## Appendix
