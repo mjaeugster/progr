@@ -326,10 +326,19 @@ simplifies the list of quantiles to a matrix.
 function for each dimension of a matrix, an array, or a
 \rcode{data.frame}.
 
+If we, for example, want to find the maximum element for each row and
+column of the \rcode{cars} data set, we can write two explicit loops
+or use \rcode{apply()}:
+<<>>=
+data("cars", package = "datasets")
 
-
-
-
+apply(cars, 1, which.max)
+apply(cars, 2, which.max)
+@
+The \rcode{MARGIN} argument gives the subscripts which the function
+will be applied over; e.g., \rcode{1} means the first dimension (i.e.,
+rows), \rcode{2} means the second dimension (i.e., columns),
+\rcode{c(1, 2)} means rows and columns (i.e., cells).
 
 Note that \rcode{data.frame}s are in fact lists of equal-length
 vectors (one list element for each column). Therefore,
@@ -340,6 +349,12 @@ of a \rcode{data.frame}.
 \paragraph{The \rcode{plyr} package.} The \rcode{plyr} package by
 H.~Wickham provides a sound generalization of the \rcode{apply}-family
 with parallelization.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Anonymous function}
+
 
 
 
