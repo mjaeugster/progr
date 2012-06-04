@@ -1,0 +1,32 @@
+
+\Sexpr{set_parent('master.tex')}
+
+\SweaveOpts{fig.path='figs/apply-', fig.align='center',
+  fig.show='hold', tidy=FALSE, prompt=TRUE, comment=''}
+
+
+<<echo=FALSE,error=FALSE,results='hide'>>=
+rm(list = ls())
+@
+
+
+\progrtitlepage{6}{}
+\progrchapternumber{5}
+\progrchapter{Vectorization}
+\progrchapterabstract{%
+  Programming without explicit loops.
+}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The main literature for this section is:
+\begin{itemize}
+  \item \textit{An Introduction to R} by \citet{Rintro}
+  \item \textit{R Language Definition} by \citet{Rlang}
+\end{itemize}
+
+
+
+\bibliographystyle{plainnat}
+\bibliography{references}
