@@ -31,7 +31,7 @@ The main literature for this section is:
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Implicit loops}
+\section{Vectorization}
 
 The idea of \textbf{vectorizing} comes from the contrast between a
 single expression applied to one or more R vectors, compared to a loop
@@ -57,8 +57,8 @@ for ( i in seq(along = x) ) {
 }
 z
 @
-However, the vectorized statement is more compact, more readable and,
-most important, faster.
+However, the vectorized statement is more compact, more readable and
+faster (for ``big'' vectors).
 
 <<cache=TRUE>>=
 set.seed(1234)
@@ -76,8 +76,7 @@ system.time(for ( i in seq(along = x) ) z[i] <- x[i] + y[i])
 The implicit loop is much faster then the explicit loop. Even through
 R internally loops over the two vectors, this is done in native
 machine code---which results in this speedup. \textbf{Therefore,
-  whenever it is possible to use R's implemented vectorization, use
-  it!}
+  whenever it is possible to use R's vectorization, use it!}
 
 One note of caution: be aware of the recycling rules. If one tries to
 operate on two vectors with different number of elements, then the
@@ -89,6 +88,154 @@ given.
 c(1, 2, 3) + 1:6
 c(1, 2, 3) + 1:5
 @
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Implicit loops}
+
+Here, we discuss some examples for implicit loops.
+
+\paragraph{Operators.} All operators \rcode{+}, \rcode{-}, etc. (see
+\rcode{?Arithmetic}, \rcode{?Comparison}) are vectorized, i.e., an
+implicit loop iterates over the two vectors.
+
+For example,
+<<>>=
+set.seed(1234)
+x <- sample(100, 5)
+((x %% 2) == 0)
+@
+returns \rcode{TRUE} if an element of the vector is even, otherwise
+\rcode{FALSE}. This statement contains two implicit loops, the first
+computes the \rcode{x \%\% 2} and the second \rcode{. == 0}.
+
+
+\paragraph{Statistical measures.} Most of the common statistical
+measures---\rcode{mean()}, \rcode{median()}, \rcode{sd()},
+etc.---imply an implicit loop. For example, the arithmetic mean of a
+vector $x_i$ $(i = 1, \ldots, n)$ is defined as
+\[
+  \frac{1}{n} \sum_{i=1}^n x_i\mbox{.}
+\]
+The sum sign means that we have to loop over the elements to add
+them. The R function does this implicitly,
+<<>>=
+mean(x)
+@
+Another way with an implicit loop is,
+<<>>=
+sum(x) / length(x)
+@
+where \rcode{sum()} loops over the elements to add them. The version
+with the explicit loop is:
+<<>>=
+z <- 0
+for ( i in seq(along = x) ) {
+  z <- z + x[i]
+}
+z <- z / length(x)
+z
+@
+
+In case we have not only a vector but a \rcode{data.frame} we may want
+to compute column means. This would imply two loops, one over the
+columns, and for each column one loop over the rows. R provides a
+function with these two implicit loops,
+\rcode{colMeans()}.
+
+<<>>=
+data("cars", package = "datasets")
+str(cars)
+colMeans(cars)
+@
+
+\rcode{rowMeans()} is the equivalent for computing row means;
+\rcode{rowSums()} and \rcode{colSums} for computing the row and column
+sums.
+
+
+\paragraph{Subsets.} Extractions (or replacements) of subsets, i.e.,
+expressions of the form \rcode{x[i]}, contain implicit loops as well.
+
+For example,
+<<>>=
+set.seed(1234)
+x <- letters[1:10]
+ind <- sample(100, 10)
+
+x[ind %% 2 == 0]
+@
+creates the subsets of letters where the corresponding element of the
+\rcode{ind} vector is even. Behind the scenes something like the
+following explicit loop is happening:
+<<>>=
+z <- character()
+for ( i in seq(along = x) ) {
+  if ( ind[i] %% 2 == 0 ) {
+    z <- c(z, x[i])
+  }
+}
+z
+@
+
+A similar result can be obtained using \rcode{ifelse()} for
+conditional element selection.
+<<>>=
+ifelse(test = ind %% 2 == 0, yes = x, no = NA)
+@
+The result is a vector with the same length as \rcode{test} which is
+filled with elements selected from either \rcode{yes} or \rcode{no}
+depending on whether the element of \rcode{test} is \rcode{TRUE} or
+\rcode{FALSE}.
+
+
+\paragraph{Matrix computations.} This concept expands to
+two- (\rcode{matrix}) and higher- (\rcode{array}) dimensional
+structures as well. Obvious examples are matrix multiplication,
+transposition and subsetting.
+
+For example, the transposition of a $n \times m$ matrix,
+<<>>=
+set.seed(1234)
+A <- matrix(sample(10), ncol = 2)
+t(A)
+@
+would consist of two explicit loops over each row of each column:
+<<>>=
+n <- nrow(A)
+m <- ncol(A)
+At <- matrix(NA, nrow = m, ncol = n)
+for ( i in seq(length = n) ) {
+  for ( j in seq(length = m) ) {
+    At[j, i] <- A[i, j]
+  }
+}
+At
+@
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{\rcode{apply()} family}
+
+
+
+
+
+
+\seealso{
+  The \rcode{plyr} package by H. Wickham for a clean generalization of
+  the \rcode{apply()} family.
+}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Functional programming}
+
+\rcode{?funprog}
+
 
 
 
