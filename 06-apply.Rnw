@@ -10,9 +10,9 @@ rm(list = ls())
 @
 
 
-\progrtitlepage{6}{}
+\progrtitlepage{6}{Vectorizing Computations}
 \progrchapternumber{5}
-\progrchapter{Vectorization}
+\progrchapter{Vectorizing Computations}
 \progrchapterabstract{%
   Programming without explicit loops.
 }
@@ -22,11 +22,76 @@ rm(list = ls())
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 The main literature for this section is:
 \begin{itemize}
-  \item \textit{An Introduction to R} by \citet{Rintro}
   \item \textit{R Language Definition} by \citet{Rlang}
+  \item \textit{Software for Data Analysis: Programming with R} by
+    \citet{Chambers@2008}
+  \item \textit{The Art of R Programming} by \citet{Matloff@2011}
 \end{itemize}
 
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Implicit loops}
+
+The idea of \textbf{vectorizing} comes from the contrast between a
+single expression applied to one or more R vectors, compared to a loop
+that computes corresponding single values.
+
+For example, the addition of elements of two vectors of equal lengths,
+<<>>=
+set.seed(1234)
+x <- rnorm(5)
+y <- runif(5)
+@
+can be done in R by making use of the vectorization of most of the
+operators:
+<<>>=
+x + y
+@
+One can think of an \textbf{implicit loop} iterating over the vectors'
+elements. We can receive the same result using an \textbf{explicit loop}:
+<<>>=
+z <- numeric(length(x))
+for ( i in seq(along = x) ) {
+  z[i] <- x[i] + y[i]
+}
+z
+@
+However, the vectorized statement is more compact, more readable and,
+most important, faster.
+
+<<cache=TRUE>>=
+set.seed(1234)
+x <- rnorm(10^6)
+y <- runif(10^6)
+
+## Implicit loop:
+system.time(x + y)
+
+## Explicit loop:
+z <- numeric(length(x))
+system.time(for ( i in seq(along = x) ) z[i] <- x[i] + y[i])
+@
+
+The implicit loop is much faster then the explicit loop. Even through
+R internally loops over the two vectors, this is done in native
+machine code---which results in this speedup. \textbf{Therefore,
+  whenever it is possible to use R's implemented vectorization, use
+  it!}
+
+One note of caution: be aware of the recycling rules. If one tries to
+operate on two vectors with different number of elements, then the
+shortest is recycled to length of longest. Only if the length of the
+longer vector is not a multiple of the shorter one, a warning is
+given.
+
+<<>>=
+c(1, 2, 3) + 1:6
+c(1, 2, 3) + 1:5
+@
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \bibliographystyle{plainnat}
 \bibliography{references}
