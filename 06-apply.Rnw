@@ -199,6 +199,7 @@ For example, the transposition of a $n \times m$ matrix,
 <<>>=
 set.seed(1234)
 A <- matrix(sample(10), ncol = 2)
+A
 t(A)
 @
 would consist of two explicit loops over each row of each column:
@@ -217,17 +218,128 @@ At
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{\rcode{apply()} family}
+\section{The \rcode{apply}-family}
+
+One common task is to repeatedly call a function for all of the
+elements of a vector, or for all of the rows or columns of a matrix or
+\rcode{data.frame} (in fact, for all of the dimensions of an array)
+and to collect the results. The \rcode{apply}-family provides
+functions for this task.
+
+The main reasons to prefer using the \rcode{apply}-family to an
+explicit loop are:
+\begin{enumerate}
+  \item The computation becomes more compact and clearer. (often true)
+  \item The computation is easily parallelizable. (always true; see
+    the \rcode{plyr} package)
+  \item The computation should run faster. \citep[problematic
+    statement; see the discussion by][p.~213]{Chambers@2008}
+\end{enumerate}
 
 
+\paragraph{Apply a function over a list or vector.} Let us start with
+a simple (and artificial) example. Given is the following function
+<<>>=
+ab <- function(x) {
+  if ( x < 10 ) {
+    "a"
+  } else {
+    "b"
+  }
+}
+@
+which returns the character \rcode{"a"} if the argument \rcode{x} is
+smaller than $10$, and \rcode{"b"} otherwise.
+<<>>=
+ab(4)
+ab(20)
+@
+Because of the nature of the \rcode{if-else} control structure, this
+function cannot be correctly applied to a vector:
+<<>>=
+ab(5:15)
+@
+Only the first element of the vector will be used. In order to apply
+the function to each element of the vector, we have to use one of the
+functions \rcode{sapply()} or \rcode{lapply()}:
+<<>>=
+sapply(5:15, ab)
+@
+The result is then a vector with the same length as the input
+vector. Each element is the result of applying the function to the
+corresponding element in the input vector. Note that \rcode{lapply()}
+will always return a \rcode{list}, whereas \rcode{sapply()} tries to
+simplify the result to a vector, matrix or higher dimensional array.
 
+A (slightly) more realistic example is that a list with results from
+different runs of an experiment are given:
+<<>>=
+set.seed(1234)
+l <- list(exp1 = rnorm(100),
+          exp2 = rnorm(100),
+          exp3 = rnorm(100))
+@
+If we now want to compute the mean for each element, we can do this,
+for example, by hand:
+<<>>=
+c(mean(l$exp1),
+  mean(l$exp2),
+  mean(l$exp3))
+@
+This works as long as the list has not too many elements. If this is
+the case, we can write an explicit loop:
+<<>>=
+ms <- numeric(length = length(l))
+for ( i in seq(along = l) ) {
+  ms[i] <- mean(l[[i]])
+}
+ms
+@
+This works. It is, however, a lot of (error-prone) code for such a
+simple task. Using the \rcode{apply}-family simplifies this task a
+lot---it reduces to:
+<<>>=
+sapply(l, mean)
+@
 
+We will see the difference between \rcode{sapply()} and
+\rcode{lapply()} when we compute a function with a vector as result;
+for example, the \rcode{quantile()} function. \rcode{lapply()},
+<<>>=
+lapply(l, quantile)
+@
+returns a list of quantiles, whereas \rcode{sapply()},
+<<>>=
+sapply(l, quantile)
+@
+simplifies the list of quantiles to a matrix.
 
 
 \seealso{
-  The \rcode{plyr} package by H. Wickham for a clean generalization of
-  the \rcode{apply()} family.
+  \rcode{mapply()} is a multivariate version of \rcode{sapply()}.
 }
+
+
+
+\paragraph{Apply a function over a matrix, an array, or a
+  \rcode{data.frame}.} The function \rcode{apply()} allows to call a
+function for each dimension of a matrix, an array, or a
+\rcode{data.frame}.
+
+
+
+
+
+
+Note that \rcode{data.frame}s are in fact lists of equal-length
+vectors (one list element for each column). Therefore,
+\rcode{lapply()} will work as well and apply a function on each column
+of a \rcode{data.frame}.
+
+
+\paragraph{The \rcode{plyr} package.} The \rcode{plyr} package by
+H.~Wickham provides a sound generalization of the \rcode{apply}-family
+with parallelization.
 
 
 
