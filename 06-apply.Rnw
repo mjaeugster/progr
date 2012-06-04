@@ -390,9 +390,26 @@ sapply(5:15,
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Functional programming}
 
-\rcode{?funprog}
-higher-order functions
+The foundations of ``vectorizing'' arise from functional
+programming. This is a programming paradigm that treats computation as
+the evaluation of functions. In contrast to imperative programming
+wich treats computation in terms of a program state and statements
+that change the program state \citep[see,
+e.g.,][]{Wikipedia-FunctionalProgramming}.
 
+One important concept is the concept of \textbf{higher-order
+  functions}. This is a function that does at least one of the
+following \citep{Wikipedia-HigherOrderFunction}:
+\begin{itemize}
+  \item take one or more functions as an input
+  \item output a function
+\end{itemize}
+Therefore, the functions of the \rcode{apply}-family are higher-order
+functions. In contrast, all other functions (like \rcode{mean()}) are
+so-called first order functions.
+
+R provides other common higher-order functions; see
+\rcode{?Map}.
 
 
 
