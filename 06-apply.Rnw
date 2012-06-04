@@ -356,7 +356,7 @@ with parallelization.
 \section{Anonymous functions}
 
 A important concept in combination with the \rcode{apply}-family, is
-the concept of anonymous functions. An anyomous function is a function
+the concept of anonymous functions. An anonymous function is a function
 object which is not assigned to an identifier.
 
 For example,
@@ -372,7 +372,7 @@ is useful for defining functions which are only used for one
 
 For example, the function \rcode{ab()} we defined above. Imagine we
 need this function only once, therefore we can define this function as
-an anoymous function directly in the \rcode{sapply()} call:
+an anonymous function directly in the \rcode{sapply()} call:
 
 <<>>=
 sapply(5:15,
@@ -393,7 +393,7 @@ sapply(5:15,
 The foundations of ``vectorizing'' arise from functional
 programming. This is a programming paradigm that treats computation as
 the evaluation of functions. In contrast to imperative programming
-wich treats computation in terms of a program state and statements
+which treats computation in terms of a program state and statements
 that change the program state \citep[see,
 e.g.,][]{Wikipedia-FunctionalProgramming}.
 
