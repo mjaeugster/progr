@@ -353,8 +353,37 @@ with parallelization.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Anonymous function}
+\section{Anonymous functions}
 
+A important concept in combination with the \rcode{apply}-family, is
+the concept of anonymous functions. An anyomous function is a function
+object which is not assigned to an identifier.
+
+For example,
+<<>>=
+function(x) {
+  x + 1
+}
+@
+creates a ``function object which has no name''. In this case, the
+object somehow gets lost and is not usable. Nevertheless, this concept
+is useful for defining functions which are only used for one
+\rcode{apply}-family function call.
+
+For example, the function \rcode{ab()} we defined above. Imagine we
+need this function only once, therefore we can define this function as
+an anoymous function directly in the \rcode{sapply()} call:
+
+<<>>=
+sapply(5:15,
+       function(x) {
+         if ( x < 10 ) {
+           "a"
+         } else {
+           "b"
+         }
+       })
+@
 
 
 
@@ -362,6 +391,7 @@ with parallelization.
 \section{Functional programming}
 
 \rcode{?funprog}
+higher-order functions
 
 
 
