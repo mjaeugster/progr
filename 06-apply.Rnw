@@ -43,8 +43,8 @@ set.seed(1234)
 x <- rnorm(5)
 y <- runif(5)
 @
-can be done in R by making use of the vectorization of most of the
-operators:
+can be done in R by making use of the implemented vectorized addition
+operator:
 <<>>=
 x + y
 @
@@ -97,8 +97,8 @@ c(1, 2, 3) + 1:5
 Here, we discuss some examples for implicit loops.
 
 \paragraph{Operators.} All operators \rcode{+}, \rcode{-}, etc. (see
-\rcode{?Arithmetic}, \rcode{?Comparison}) are vectorized, i.e., an
-implicit loop iterates over the two vectors.
+\rcode{?Arithmetic}, \rcode{?Comparison}) are vectorized, i.e.,
+implicit loops iterate over the two vectors.
 
 For example,
 <<>>=
@@ -107,8 +107,8 @@ x <- sample(100, 5)
 ((x %% 2) == 0)
 @
 returns \rcode{TRUE} if an element of the vector is even, otherwise
-\rcode{FALSE}. This statement contains two implicit loops, the first
-computes the \rcode{x \%\% 2} and the second \rcode{. == 0}.
+\rcode{FALSE}. On can think of two implicit loops, the first computes
+the \rcode{x \%\% 2} and the second \rcode{. == 0}.
 
 
 \paragraph{Statistical measures.} Most of the common statistical
@@ -316,7 +316,8 @@ simplifies the list of quantiles to a matrix.
 
 
 \seealso{
-  \rcode{mapply()} is a multivariate version of \rcode{sapply()}.
+  \rcode{mapply()} is a multivariate version of \rcode{sapply()};
+  and \rcode{replicate()} for repeated evaluation of expressions.
 }
 
 
@@ -399,7 +400,7 @@ e.g.,][]{Wikipedia-FunctionalProgramming}.
 
 One important concept is the concept of \textbf{higher-order
   functions}. This is a function that does at least one of the
-following \citep{Wikipedia-HigherOrderFunction}:
+following \citep[cf.][]{Wikipedia-HigherOrderFunction}:
 \begin{itemize}
   \item take one or more functions as an input
   \item output a function
@@ -408,7 +409,9 @@ Therefore, the functions of the \rcode{apply}-family are higher-order
 functions. In contrast, all other functions (like \rcode{mean()}) are
 so-called first order functions.
 
-R provides other common higher-order functions; see
+R supports---as many other languages---multiple programming
+paradigms; and, among others, the functional programming paradigm. In
+this sense, R provides further common higher-order functions; see
 \rcode{?Map}.
 
 
