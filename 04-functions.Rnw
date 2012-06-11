@@ -26,6 +26,7 @@ The main literature for this section is:
     \citet{Chambers@2008}
   \item \textit{An Introduction to R} by \citet{Rintro}
   \item \textit{R Language Definition} by \citet{Rlang}
+  \item \textit{The Art of R Programming} by \citet{Matloff@2011}
 \end{itemize}
 
 
