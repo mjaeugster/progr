@@ -389,6 +389,45 @@ sapply(5:15,
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{\rcode{apply}-family gems}
+
+\paragraph{The \rcode{do.call(, lapply())} gem.} It is very
+common (at least in my way of programming) that I want to combine the
+return values of individual \rcode{lapply()}-iterations into one
+``big'' object.
+
+For example, the return values of the individual iterations are
+\rcode{data.frame}s,
+<<>>=
+ds <- lapply(1:10, function(i) data.frame(a = runif(4), b = gl(2, 2)))
+str(ds, 1)
+@
+and we want to combine them into one big \rcode{data.frame}. In such
+cases, the \rcode{do.call(...)} call is very handy.
+<<>>=
+d <- do.call(rbind, ds)
+str(d)
+@
+The first argument of the \rcode{do.call()} function is the function
+to be called, and the second argument is a list of arguments to the
+function call. Note that \rcode{sapply()} does not return the wanted
+result.
+
+
+\paragraph{The \rcode{lapply(, "[[", )} gem.} If you want to access
+only specific parts of a list's elments, you can utilize the fact that
+subset operators are functions.
+
+For example, to get the column \rcode{b} of every \rcode{data.frame}
+in the above list, we can use:
+<<>>=
+bs <- lapply(ds, "[[", "b")
+str(bs)
+@
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Functional programming}
 
 The foundations of ``vectorizing'' arise from functional
@@ -410,7 +449,7 @@ functions. In contrast, all other functions (like \rcode{mean()}) are
 so-called first order functions.
 
 R supports---as many other languages---multiple programming
-paradigms; and, among others, the functional programming paradigm. In
+paradigms, and, among others, the functional programming paradigm. In
 this sense, R provides further common higher-order functions; see
 \rcode{?Map}.
 
