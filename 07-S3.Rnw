@@ -67,16 +67,16 @@ object; and this attribute simply is a character vector of class names.
 
 An object's class is set using the \rcode{class()} function,
 <<>>=
-a <- 42
-class(a) <- "FavoriteNumber"
+a <- 11
+class(a) <- "PrimeNumber"
 @
 or, equivalently, by setting the \rcode{class} attribute,
 <<>>=
 a <- 42
-attr(a, "class") <- "FavoriteNumber"
+attr(a, "class") <- "PrimeNumber"
 
 ## One-liner:
-a <- structure(a, class = "FavoriteNumber")
+a <- structure(a, class = "PrimeNumber")
 @
 
 In both cases the object now has an additonal attribute which defines
@@ -88,9 +88,10 @@ attributes(a)
 @
 
 Note that this approach allows to turn any object into an object of
-class \rcode{FavoriteNumber}, whether or not it makes sense.
+class \rcode{"PrimeNumber"}, whether or not it makes sense.
 <<>>=
-structure("Hello World!", class = "FavoriteNumber")
+structure("10", class = "PrimeNumber")
+structure("Hello World!", class = "PrimeNumber")
 @
 
 Every object has a class,
@@ -162,38 +163,81 @@ In order to define the behavior of objects we have to define
 \textbf{generic functions} and corresponding \textbf{methods}
 implementing the concrete behavior of specific classes.
 
-Generic functions are functions with the code line
-\rcode{UseMethod("...")} in their function body. For example,
-\rcode{print()}, \rcode{summary()}, and \rcode{plot()} are prominent
-generic functions already defined by the \rcode{base} package:
+Generic functions are functions with the statement
+\rcode{UseMethod("...")} in their body. Prominent generic functions
+already defined in the \rcode{base} package are \rcode{print()},
+\rcode{summary()}, and \rcode{plot()}:
 <<>>=
 print
 @
 
-
-
-
-
-
-The decision process of the generic
-function to decide which method to call for a specific object is call
-\textbf{method dispatching}.
-
-
-
-Generic functions and method dispatching
-
-
+Methods implementing generic functions follow a simple naming
+convention, namely \rcode{generic.class}. The function
+\rcode{methods()} lists all available methods for an S3 generic
+function; e.g., all available \rcode{print} methods:
 <<>>=
-print.FavoriteNumber <- function(x, ...) {
-  cat(x, "is a favorite number.\n")
+head(methods("print"))
+@
+
+A generic function (in fact the statement \rcode{UseMethod()}) then
+uses the class of the first argument to figure out which method to
+call. If no such method is found, the \rcode{default}-method
+(\rcode{generic.default}) is used, if it exists, or an error
+results. This is called \textbf{method dispatching}.
+
+For example,
+<<>>=
+a <- 11
+class(a)
+print(a)
+@
+Here, the generic function \rcode{print()} first looks for a method
+\rcode{print.numeric()}. As such a method is not available, it looks
+for the method \rcode{print.default()}, finds it, and passes the call
+to this function. The concrete executed function call therefore is
+\rcode{print.default(a)}.
+
+Now, let us define the object \rcode{a} as an object of class
+\rcode{PrimeNumber}:
+<<>>=
+class(a) <- "PrimeNumber"
+print(a)
+@
+\rcode{print(a)} still executes \rcode{print.default(a)} as there is
+no \rcode{print}-method for the class \rcode{PrimeNumber}
+available. However, we easily can implement one:
+<<>>=
+print.PrimeNumber <- function(x, ...) {
+  cat("Prime number:", x, "\n")
 }
+@
+The implementation has to follow the signature of the generic
+function.
+
+The method dispatch now finds the specialized \rcode{print}-method and
+dispatch to it:
+<<>>=
+print(a)
 @
 
 
+\paragraph{The Monte-Carlo $\pi$ example.} In case of this example we
+can use this object-oriented system to provide a more user-friendly
+output.
 
+<<>>=
+print.mcpi <- function(x, ...) {
+  cat("Monte-Carlo PI:", x$pi, "\n")
+}
 
-\paragraph{The Monte-Carlo $\pi$ example.}
+summary.mcpi <- function(object, ...) {
+  hits <- sum(object$sim$inside)
+
+  print(object)
+  cat(sprintf("Estimated by %s hits from %s trials.\n",
+              object$pi, hits, object$n))
+}
+@
 
 
 
