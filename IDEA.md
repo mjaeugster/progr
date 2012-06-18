@@ -1,4 +1,3 @@
-
 ## Programming R I
    - Basic Programming Stuff
    - Error Handling
