@@ -30,6 +30,206 @@ The main literature for this section is:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Object-oriented programming}
 
+Object-oriented programming is a programming paradigm using
+\textbf{objects} to represent a problem as software. Central to any
+object-oriented language are the concepts of \textbf{class} and of
+\textbf{methods}.
+
+A class is definition, i.e., the blueprint, from which the individual
+objects are created. A specific object is then an instance of a
+specific class. Classes contains structural, behavioral, and
+relational information. .........
+
+
+R has three object-oriented systems:
+\begin{description}
+  \item [S3:] ``generic-function'' style; see \rcode{?class}
+
+  \item [S4:] formal ``generic-function'' style with ``multiple
+    dispatch''; implemented in the package \rcode{methods}, see
+    \rcode{?Classes}, \rcode{?Methods}.
+
+  \item [ReferenceClasses:] ``message-passing'' style; implemented in the package
+    \rcode{methods}, see \rcode{?ReferenceClasses}.
+\end{description}
+
+This document explains the S3 object system (which I find great!).
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Object classes (Structure)}
+
+The S3 system (\rcode{?class}) does not provide formal class
+definitions (i.e., classes as blueprints objects). Instead, the class
+system is facilitated through the \rcode{class} attribute of an
+object; and this attribute simply is a character vector of class names.
+
+An object's class is set using the \rcode{class()} function,
+<<>>=
+a <- 42
+class(a) <- "FavoriteNumber"
+@
+or, equivalently, by setting the \rcode{class} attribute,
+<<>>=
+a <- 42
+attr(a, "class") <- "FavoriteNumber"
+
+## One-liner:
+a <- structure(a, class = "FavoriteNumber")
+@
+
+In both cases the object now has an additonal attribute which defines
+its class:
+<<>>=
+a
+class(a)
+attributes(a)
+@
+
+Note that this approach allows to turn any object into an object of
+class \rcode{FavoriteNumber}, whether or not it makes sense.
+<<>>=
+structure("Hello World!", class = "FavoriteNumber")
+@
+
+Every object has a class,
+<<>>=
+class(pi)
+@
+If there is no class attribute set,
+<<>>=
+attributes(pi)
+@
+the object has an \textbf{implicit class}, \rcode{matrix},
+\rcode{array}, \rcode{data.frame} or the result of \rcode{mode(x)}
+\citep[cf.][Section~6.2]{Chambers@2008}.
+
+
+\paragraph{The Monte-Carlo $\pi$ example.} We use the Monte-Carlo
+$\pi$ estimation as example throughout this chapter.
+
+If a circle of radius $R$ is inscribed inside a square with side
+length $2 * R$, then the area of the circle will be $\pi * R^2$ and
+the area of the square will be $(2 * R)^2$. So the ratio of the area
+of the circle to the area of the square will be $\frac{\pi}{4}$.
+This means that, if you pick $n$ points at random inside the square,
+approximately $n * \frac{\pi}{4}$ of those points should fall inside
+the circle. See, for example, \citet{Andersson@2010}.
+
+The following function is an implementation of this algorithm:
+<<>>=
+mcpi <- function(n) {
+  x <- runif(n)
+  y <- runif(n)
+
+  inside <- ((x^2 + y^2) <= 1)
+
+  pi <- 4 * sum(inside) / n
+
+  ret <- list(pi = pi,
+              n = n,
+              sim = data.frame(x = x, y = y, inside = inside))
+
+  class(ret) <- "mcpi"
+
+  ret
+}
+@
+
+It returns a list with three elements: (1)~the estimeted \rcode{pi},
+(2)~the number of drawn points \rcode{n}, (3)~and the simulation data,
+a \rcode{data.frame} with the columns \rcode{x} (numeric), \rcode{y}
+(numeric), and \rcode{inside} (logical). In order to declare this list
+as a ``special'' object, i.e., an object of class \rcode{mcpi}, we
+define its class attribute before returning the list.
+
+When executing the function,
+<<>>=
+set.seed(1234)
+mcpi(5)
+@
+we receive the list with the set class attribute. In the following we
+write methods for this \rcode{mcpi} class to make the handling of such
+objects straightforward.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Class methods (Behavior)}
+
+In order to define the behavior of objects we have to define
+\textbf{generic functions} and corresponding \textbf{methods}
+implementing the concrete behavior of specific classes.
+
+Generic functions are functions with the code line
+\rcode{UseMethod("...")} in their function body. For example,
+\rcode{print()}, \rcode{summary()}, and \rcode{plot()} are prominent
+generic functions already defined by the \rcode{base} package:
+<<>>=
+print
+@
+
+
+
+
+
+
+The decision process of the generic
+function to decide which method to call for a specific object is call
+\textbf{method dispatching}.
+
+
+
+Generic functions and method dispatching
+
+
+<<>>=
+print.FavoriteNumber <- function(x, ...) {
+  cat(x, "is a favorite number.\n")
+}
+@
+
+
+
+
+\paragraph{The Monte-Carlo $\pi$ example.}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Inheritance (Relation)}
+
+
+
+
+
+Objects can have more than one class:
+<<>>=
+class(a) <- c("FavoriteNumber", "Number")
+@
+This is a simple way to define class/object hierarchies. The order of
+the class names defines the inheritance hierarchy; here
+\rcode{FavoriteNumber} inherits from \rcode{Number}.
+
+
+
+
+When a generic function fun is applied to an object with class
+attribute c("first", "second"), the system searches for a function
+called fun.first and, if it finds it, applies it to the object. If no
+such function is found, a function called fun.second is tried. If no
+class name produces a suitable function, the function fun.default is
+used (if it exists). If there is no class attribute, the implicit
+class is tried, then the default method.
+
+
+
+
+<<eval=FALSE>>=
+  class(ret) <- c("mcpi", class(ret))
+@
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
