@@ -1,9 +1,10 @@
-
-## Programming R I
+## Programming R
    - Basic Programming Stuff
    - Error Handling
      - Debugging
        - browser, debug, undebug
+       - trace
+         - Use trace to make computions verbose (e.g., in simulations)
        - options(error = recover)
        - traceback
        - http://cran.r-project.org/doc/manuals/R-exts.html#Debugging
@@ -11,9 +12,11 @@
        - tryCatch
        - stop, warning, message
    - Profiling
-   - Package development
    - Parallel programming
+   - Simulations
+     - Define general simulation structure (see e.g. Zeileis paper)
 
+## Package development
 
 ## Programming R II
     98-*.Rnw
