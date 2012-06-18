@@ -1,0 +1,37 @@
+
+\Sexpr{set_parent('master.tex')}
+
+\SweaveOpts{fig.path='figs/apply-', fig.align='center',
+  fig.show='hold', tidy=FALSE, prompt=TRUE, comment=''}
+
+
+<<echo=FALSE,error=FALSE,results='hide'>>=
+rm(list = ls())
+@
+
+
+\progrtitlepage{7}{The S3 object system}
+\progrchapternumber{6}
+\progrchapter{The S3 object system}
+\progrchapterabstract{%
+  Object-oriented programming using the S3 object system.
+}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The main literature for this section is:
+\begin{itemize}
+  \item \textit{R Language Definition} by \citet{Rlang}
+\end{itemize}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Object-oriented programming}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bibliographystyle{plainnat}
+\bibliography{references}
