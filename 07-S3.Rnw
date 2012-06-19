@@ -35,11 +35,12 @@ Object-oriented programming is a programming paradigm using
 object-oriented language are the concepts of \textbf{class} and of
 \textbf{methods}.
 
-A class is definition, i.e., the blueprint, from which the individual
-objects are created. A specific object is then an instance of a
-specific class. Classes contains structural, behavioral, and
-relational information. .........
+A class is a definition, i.e., the blueprint, from which the
+individual objects are created. A specific object is then an instance
+of a specific class. Classes contains \textbf{structural},
+\textbf{behavioral}, and \textbf{relational} information.
 
+\textit{TODO: more details}
 
 R has three object-oriented systems:
 \begin{description}
@@ -53,17 +54,24 @@ R has three object-oriented systems:
     \rcode{methods}, see \rcode{?ReferenceClasses}.
 \end{description}
 
-This document explains the S3 object system (which I find great!).
+This document explains the S3 object system (which I find really
+great!). One of the impacts of the S3 object system is that for two
+vectors, the same function results in two different plots:
+<<fig.keep='last', fig.width=5, fig.height=2>>=
+par(mfrow = c(1, 2), mar = c(4, 4, 1, 0))
+plot(runif(10))
+plot(gl(5, 2))
+@
 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Object classes (Structure)}
 
-The S3 system (\rcode{?class}) does not provide formal class
-definitions (i.e., classes as blueprints objects). Instead, the class
-system is facilitated through the \rcode{class} attribute of an
-object; and this attribute simply is a character vector of class names.
+The S3 system does not provide formal class definitions (i.e., classes
+as blueprints objects). Instead, the class system is facilitated
+through the \rcode{class} attribute of an object; and this attribute
+simply is a character vector of class names.
 
 An object's class is set using the \rcode{class()} function,
 <<>>=
@@ -79,7 +87,7 @@ attr(a, "class") <- "PrimeNumber"
 a <- structure(a, class = "PrimeNumber")
 @
 
-In both cases the object now has an additonal attribute which defines
+In both cases the object now has an additional attribute which defines
 its class:
 <<>>=
 a
@@ -121,6 +129,9 @@ the circle. See, for example, \citet{Andersson@2010}.
 The following function is an implementation of this algorithm:
 <<>>=
 mcpi <- function(n) {
+  stopifnot(is.numeric(n))
+  stopifnot(n >= 0)
+
   x <- runif(n)
   y <- runif(n)
 
@@ -138,7 +149,7 @@ mcpi <- function(n) {
 }
 @
 
-It returns a list with three elements: (1)~the estimeted \rcode{pi},
+It returns a list with three elements: (1)~the estimated \rcode{pi},
 (2)~the number of drawn points \rcode{n}, (3)~and the simulation data,
 a \rcode{data.frame} with the columns \rcode{x} (numeric), \rcode{y}
 (numeric), and \rcode{inside} (logical). In order to declare this list
@@ -174,7 +185,7 @@ print
 Methods implementing generic functions follow a simple naming
 convention, namely \rcode{generic.class}. The function
 \rcode{methods()} lists all available methods for an S3 generic
-function; e.g., all available \rcode{print} methods:
+function; e.g., all available \rcode{print} methods are:
 <<>>=
 head(methods("print"))
 @
@@ -212,10 +223,8 @@ print.PrimeNumber <- function(x, ...) {
 }
 @
 The implementation has to follow the signature of the generic
-function.
-
-The method dispatch now finds the specialized \rcode{print}-method and
-dispatch to it:
+function (e.g., \rcode{args(print)}). The method dispatch now finds
+the specialized \rcode{print}-method and dispatches to it:
 <<>>=
 print(a)
 @
@@ -223,20 +232,50 @@ print(a)
 
 \paragraph{The Monte-Carlo $\pi$ example.} In case of this example we
 can use this object-oriented system to provide a more user-friendly
-output.
+handling of the result.
 
 <<>>=
+set.seed(1234)
+p <- mcpi(1000)
+@
+
+We can implement a \rcode{print}-method:
+<<>>=
 print.mcpi <- function(x, ...) {
-  cat("Monte-Carlo PI:", x$pi, "\n")
+  cat(x$pi, "(estimated by the Monte-Carlo method)\n")
 }
 
+p
+@
+
+And a \rcode{summary}-method for more details:
+<<>>=
 summary.mcpi <- function(object, ...) {
   hits <- sum(object$sim$inside)
 
   print(object)
   cat(sprintf("Estimated by %s hits from %s trials.\n",
-              object$pi, hits, object$n))
+              hits, object$n))
 }
+
+summary(p)
+@
+
+If we want to provide a method to access the estimated $\pi$ value, we
+have to define a generic method:
+<<>>=
+estpi <- function(x, ...) {
+  UseMethod("estpi", x)
+}
+@
+And then the implementation of this generic method for the
+\rcode{mcpi} class:
+<<>>=
+estpi.mcpi <- function(x, ...) {
+  x$pi
+}
+
+estpi(p)
 @
 
 
@@ -244,35 +283,94 @@ summary.mcpi <- function(object, ...) {
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Inheritance (Relation)}
 
-
-
-
-
 Objects can have more than one class:
 <<>>=
-class(a) <- c("FavoriteNumber", "Number")
+class(a) <- c("PrimeNumber", "Number")
 @
 This is a simple way to define class/object hierarchies. The order of
 the class names defines the inheritance hierarchy; here
-\rcode{FavoriteNumber} inherits from \rcode{Number}.
+\rcode{PrimeNumber} inherits from \rcode{Number} (is-a relation).
 
+This means, if a method for the class \rcode{Number} is defined,
+and no method for the class \rcode{PrimeNumber}, the
+\rcode{PrimeNumber} object inherits the method from its superclass.
 
+For example, the function
+<<>>=
+plot.Number <- function(x, y, ...) {
+  x0 <- ifelse(x > 0, -1, +1)
+  x1 <- ceiling(x) + 1
 
-
-When a generic function fun is applied to an object with class
-attribute c("first", "second"), the system searches for a function
-called fun.first and, if it finds it, applies it to the object. If no
-such function is found, a function called fun.second is tried. If no
-class name produces a suitable function, the function fun.default is
-used (if it exists). If there is no class attribute, the implicit
-class is tried, then the default method.
-
-
-
-
-<<eval=FALSE>>=
-  class(ret) <- c("mcpi", class(ret))
+  plot(1, type = "n", xlim = c(x0, x1), ylim = c(-1, 1),
+       axes = FALSE, xlab = "Number line")
+  arrows(0, 0, x, 0, lwd = 2)
+  axis(1, at = seq(x0, x1))
+  abline(v = 0, col = "gray", lty = 2)
+}
 @
+plots a number line in order to visualize a number. If we want to plot
+the object \rcode{a} which is of class \rcode{PrimeNumber} and
+inherits from class \rcode{Number}, no \rcode{plot}-method for
+\rcode{PrimeNumber} is found, but for \rcode{Number}:
+<<fig.keep='last', fig.width=5, fig.height=1.5>>=
+par(mar = c(4, 0, 0, 0))
+plot(a)
+@
+
+In detail, the method dispatch with multiple classes is as follows:
+When a generic function \rcode{generic} is applied to an object with
+class attribute \rcode{c("first", "second")}, the system searches for a
+function called \rcode{generic.first} and, if it finds it, applies it to
+the object. If no such function is found, a function called
+\rcode{generic.second} is tried. If no class name produces a suitable
+function, the function \rcode{generic.default} is used (if it
+exists). If there is no class attribute, the implicit class is tried,
+then the default method.
+
+As a good practice, I suggest to always add an object's "original"
+classes to the new classes:
+<<>>=
+a <- 11
+class(a) <- c("PrimeNumber", "Number", class(a))
+class(a)
+@
+
+
+
+\paragraph{The Monte-Carlo $\pi$ example.} Let us add another
+algorithm to estimate $\pi$, namely the Leibniz formula for $\pi$. It
+states that
+\[
+  \sum_{i = 0}{\infty} \frac{(-1)^i}{2i + 1} = \frac{\pi}{4}\mbox{.}
+\]
+So we can use this infinite series to approximate $\pi$ by computing
+the first $n$ parts. The following function implements this algorithm:
+
+<<>>=
+leibnizpi <- function(n) {
+  stopifnot(is.numeric(n))
+  stopifnot(n >= 0)
+
+  approx <- 1
+  for ( k in seq(length = n) ) {
+    approx <- approx + (-1)^k / (2*k + 1)
+  }
+
+  pi <- 4 * approx
+
+  ret <- list(pi = pi, n = n)
+  class(ret) <- c("leibnizpi", "piest", class(ret))
+
+  ret
+}
+@
+
+We already added the class \rcode{piest} as a superclass for all
+algorithms estimating $\pi$. In further consequence, we have to adapt
+the \rcode{mcpi()} function to return an object of class \rcode{piest}
+as well. Then we can, for example, implement specific \rcode{print()}
+and \rcode{summary()} methods for this algorithm and a general
+\rcode{piest()} methods for all kinds of algorithms estimating $\pi$.
 
 
 
