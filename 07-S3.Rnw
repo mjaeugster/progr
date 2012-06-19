@@ -40,7 +40,7 @@ individual objects are created. A specific object is then an instance
 of a specific class. Classes contains \textbf{structural},
 \textbf{behavioral}, and \textbf{relational} information.
 
-\textit{TODO: more details}
+\textit{TODO: add more details ...}
 
 R has three object-oriented systems:
 \begin{description}
@@ -365,7 +365,7 @@ leibnizpi <- function(n) {
 }
 @
 
-We already added the class \rcode{piest} as a superclass for all
+We introduce the class \rcode{piest} as a superclass for all
 algorithms estimating $\pi$. In further consequence, we have to adapt
 the \rcode{mcpi()} function to return an object of class \rcode{piest}
 as well. Then we can, for example, implement specific \rcode{print()}
