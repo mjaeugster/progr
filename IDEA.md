@@ -17,6 +17,10 @@
      - Define general simulation structure (see e.g. Zeileis paper)
 
 ## Package development
+   - package structure
+   - roxygen
+   - R CMD check
+   - devtools
 
 ## Programming R II
     98-*.Rnw
