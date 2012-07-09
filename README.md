@@ -9,7 +9,7 @@ course [Programmieren mit Statistischer
 Software](http://www.lrz.de/~agleisch/teaching/progstat12/).
 
 
-## Fundamentals of R programming
+## R programming fundamentals
    1. [Basic vocabulary](https://github.com/downloads/mjaeugster/progr/01-jargon.pdf)
    1. [Sample session](https://github.com/downloads/mjaeugster/progr/02-session.pdf)
    1. [Navigating through R](https://github.com/downloads/mjaeugster/progr/03-navigation.pdf)
