@@ -19,7 +19,7 @@ Software](http://www.lrz.de/~agleisch/teaching/progstat12/).
    1. [S3 object system](https://github.com/downloads/mjaeugster/progr/07-S3.pdf)
 
 
-## Advanced R programming
+## R programming topics
    1. [Computing with text]
 
 
