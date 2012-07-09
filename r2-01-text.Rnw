@@ -1,0 +1,49 @@
+
+\Sexpr{set_parent('master.tex')}
+
+\SweaveOpts{fig.path='figs/text-', fig.align='center',
+  fig.show='hold', tidy=FALSE, prompt=TRUE, comment=''}
+
+
+<<echo=FALSE,error=FALSE,results='hide'>>=
+rm(list = ls())
+@
+
+
+\progrtitlepage{1}{Computing with text}
+\progrchapternumber{0}
+\progrchapter{Computing with text}
+\progrchapterabstract{%
+  Working with textual data; encodings, regular expression, etc.
+}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The main literature for this section is:
+\begin{itemize}
+  \item \textit{Software for Data Analysis: Programming with R} by
+    \citet{Chambers@2008}
+\end{itemize}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Text computations}
+
+Processing text is an important task in statistical computing, either
+for data cleaning (e.g., cleaning variable names) or data analyses of
+text data (e.g., text mining, computational biology).
+
+
+
+
+regular expressions
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+
+% Predictive text
