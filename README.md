@@ -9,7 +9,7 @@ course [Programmieren mit Statistischer
 Software](http://www.lrz.de/~agleisch/teaching/progstat12/).
 
 
-## Contents
+## Fundamentals of R programming
    1. [Basic vocabulary](https://github.com/downloads/mjaeugster/progr/01-jargon.pdf)
    1. [Sample session](https://github.com/downloads/mjaeugster/progr/02-session.pdf)
    1. [Navigating through R](https://github.com/downloads/mjaeugster/progr/03-navigation.pdf)
@@ -17,6 +17,10 @@ Software](http://www.lrz.de/~agleisch/teaching/progstat12/).
    1. [Control structures](https://github.com/downloads/mjaeugster/progr/05-control.pdf)
    1. [Vectorizing computations](https://github.com/downloads/mjaeugster/progr/06-apply.pdf)
    1. [S3 object system](https://github.com/downloads/mjaeugster/progr/07-S3.pdf)
+
+
+## Advanced R programming
+   1. [Computing with text]
 
 
 ## Appendix
