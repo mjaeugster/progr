@@ -18,10 +18,18 @@ rm(list = ls())
 }
 
 
+%%% NOTES: %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% - I like the general story line, but I need a better data set
+%   - And then start with the import of the data set?
+%   - And show every example with these data set? Because simple
+%     examples are already in the help pages.
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 The main literature for this section is:
 \begin{itemize}
+  \item \textit{An Introduction to R} by \citet{Rintro}
   \item \textit{Software for Data Analysis: Programming with R} by
     \citet{Chambers@2008}
 \end{itemize}
@@ -33,12 +41,225 @@ The main literature for this section is:
 
 Processing text is an important task in statistical computing, either
 for data cleaning (e.g., cleaning variable names) or data analyses of
-text data (e.g., text mining, computational biology).
+text data (e.g., text mining, computational biology). Different
+computational challenges are \textit{sorting}, \textit{substring
+  searching}, \textit{pattern matching}, \textit{data compression},
+and \textit{cryptography}. A variety of literature describes
+specialized algorithms for these tasks \citep[see,
+e.g.,][Chapter~5]{Sedgewick+Wayne@2011}.
+
+Here we focus on the tasks of (1)~string matching and (2)~finding and
+replacing substrings and patterns in text.
+
+\paragraph{The ``Better Life Index'' example.} We use the
+\href{https://docs.google.com/spreadsheet/ccc?key=0AonYZs4MzlZbdDFCdVVHQnJSbWhHTFhJQlROcmxQVXc#gid=3}{better
+  life index background data set} (slightly modified) provided by the
+\href{http://www.guardian.co.uk/news/datablog/2012/may/22/better-life-index-oecd}{Guardian
+  Datablog} to demonstrate the text computation concepts for data
+analysis.
+
+<<>>=
+bli <- read.csv2("better-life-index.csv",
+                 stringsAsFactors = FALSE)
+@
+
+Looking at the data set shows that we have to clean the data set, and
+that we need text computation for this task.
 
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Character vectors}
 
-regular expressions
+In general, character strings are entered using either matching double
+(\rcode{"}) or single (\rcode{'}) quotes.
+<<>>=
+t <- c("The quick brown fox", "jumps over the lazy dog")
+@
+They use C-style escape sequences, using \ as the escape character
+(see \rcode{?Quotes} for a full list of available escape sequences).
+
+The length of the vector is, as usual,
+<<>>=
+length(t)
+@
+The number of characters for each element is
+<<>>=
+nchar(t)
+@
+
+Two or more elements (after converting them to character strings) are
+concatenated using the \rcode{paste()} function. For example:
+<<>>=
+paste("Today is", date())
+paste("Today is", date(), sep = ": ")
+@
+
+If the arguments are vectors, they are concatenated term-by-term to
+give a character vector result:
+<<>>=
+paste("A", 1:6, sep = "")
+@
+The shorter vector is recycled. If the \rcode{collapse} argument is a
+character string, the result is collapsed into one character string
+with \rcode{collapse} as separator:
+<<>>=
+paste(t, collapse = " ")
+paste(t, collapse = " ... ")
+@
+
+Another useful function that returns a character vector containing a
+formatted combination of text and variable values is
+\rcode{sprintf()}. Further basic functions are \rcode{tolower()},
+\rcode{toupper()}, \rcode{strtrim()}, \rcode{strwrap()},
+\rcode{abbreviate()}, etc.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Exact string matching}
+
+Exact string matching is the computation that determines whether a
+some candidate strings are identical to strings in a lookup table.
+
+The function \rcode{match()},
+<<>>=
+match(c("a", "y"), letters)
+match(c("a", 1), letters)
+@
+returns the element indices of the candidates in the lookup
+table. The binary operator \rcode{\%in\%} returns a logical vector
+indicating if there is a match or not for its left
+operand. \rcode{pmatch()} and \rcode{charmatch()} are similar
+functions.
+
+
+\paragraph{The ``Better Life Index'' example.} We can use this, for
+example, to find the corresponding columns of a data set:
+<<>>=
+head(names(bli))
+
+match(c("Housing_Rooms.per.person",
+        "Environment_Air.pollution"), names(bli))
+@
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Substrings}
+
+Substrings are sequential characters within a character string. The
+functions \rcode{substr()} and \rcode{substring()} extract substrings
+in a character vector based on character positions.
+
+<<>>=
+substr(t, 5, 10)
+substring(t[2], 21)
+substring(t[2], 21) <- "bee"
+t
+@
+
+
+\paragraph{The ``Better Life Index'' example.} We can use the
+\rcode{substr()} function to extract, for example, the number from the
+column \rcode{Income\_Households.income}. The observations in this
+column are composed of \rcode{"<number> USD"}, therefore we just
+remove the last for characters:
+
+<<>>=
+substr(bli$Income_Households.income,
+       start = 1,
+       stop = nchar(bli$Income_Households.income) - 4)
+@
+
+We then use \rcode{as.numeric()} to convert the result into numerical
+values.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Pattern matching}
+
+Often the extraction of substrings based on character positions is not
+working because the length of the substring is not exactly
+defined. Imagine, for example, that we want to extract the numbers in
+the example above and not remove the currency. Or, tasks where we want
+to do string matching based on substrings and not based on the
+complete character string.
+
+\textbf{Regular expressions} allow to define pattern matching rules
+encoded into a character string. See \rcode{?regexp} for a detailed
+definition.
+
+Pattern matching:
+<<>>=
+t2 <- c("Programmieren", "mit", "statistischer", "Software", "SS2012")
+
+grep("a", t2)
+grep("[[:alpha:]]", t2)
+grep("[[:digit:]]", t2)
+@
+
+Pattern substitution:
+<<>>=
+t3 <- c("2012-07-10", "2012-01-20", "May 5, 2012")
+
+grep("\\d{4}-\\d{2}-\\d{2}", t3)
+sub("(\\d{4})-\\d{2}-\\d{2}", "\\1", t3)
+sub("(\\d{4})-(\\d{2})-(\\d{2})", "\\3.\\2.\\1", t3)
+@
+Note that we first have to check if a character is valid (using
+\rcode{grep()}) and then perform the substitution (using \rcode{sub()}).
+
+Pattern-based substrings:
+<<>>=
+t4 <- c("89. Derdiyok für Schürrle",
+        "69. Kohr für L. Bender")
+
+m <- regexec("(\\d\\d)\\. (.+) für (.+)", t4)
+regmatches(t4, m)
+@
+
+Regular expressions are supported by the base functions
+\rcode{grep()}, \rcode{grepl()}, \rcode{regexpr()},
+\rcode{gregexpr()}, \rcode{sub()}, \rcode{gsub()},
+\rcode{strsplit()}.
+
+R supports two types of regular expressions, extended regular
+expressions (the default) and Perl-like regular expressions used by
+\rcode{perl = TRUE}. There is a also \rcode{fixed = TRUE} which can be
+considered to use a literal regular expression.
+
+
+\paragraph{The ``Better Life Index'' example.} In this example, we can
+use pattern matching to get all columns for a specific category; e.g.,
+all income related columns:
+<<>>=
+grep("Income_", names(bli))
+@
+
+Or to extract the numbers:
+<<>>=
+sub("(\\d+) .+", "\\1", bli$Income_Households.income)
+@
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Data analysis}
+
+<<>>=
+satisfaction <- data.frame(
+  letter = substr(bli$COUNTRY, 1, 1),
+  value  = as.numeric(
+    sub("(.+) rate", "\\1", bli$Life.Satisfaction_Life.Satisfaction)))
+
+satisfaction
+@
+
+<<>>=
+barplot(sapply(split(satisfaction$value, satisfaction$letter), mean))
+@
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
