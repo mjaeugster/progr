@@ -20,7 +20,7 @@ Software](http://www.lrz.de/~agleisch/teaching/progstat12/).
 
 
 ## R programming topics
-   1. [Computing with text]
+   1. [Computing with text](https://github.com/downloads/mjaeugster/progr/r2-01-text.pdf)
 
 
 ## Appendix
