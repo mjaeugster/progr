@@ -1,4 +1,4 @@
-## Programming R
+## Basic R programming
    - Basic Programming Stuff
    - Error Handling
      - Debugging
@@ -12,6 +12,7 @@
        - tryCatch
        - stop, warning, message
    - Profiling
+
    - Parallel programming
    - Simulations
      - Define general simulation structure (see e.g. Zeileis paper)
@@ -22,7 +23,7 @@
    - R CMD check
    - devtools
 
-## Programming R II
+## Advanced R programming
     98-*.Rnw
    - Computing on the Language
      - Formulas
